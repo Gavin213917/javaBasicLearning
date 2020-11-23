@@ -1,0 +1,25 @@
+
+
+		NIO---New Io
+		1：新的Io和传统的Io有相同的目的，都是用来进入输入和输出的，但是新的IO使用了不同的方式来处理输入和输出。新IO采用内存映射文件的方式来处理
+		输入和输出，新IO将文件或文件的一段区域映射到内存中，这样就可以像访问内存一样来访问文件，通过这个访问文件比传统的Io要快得多。
+
+		2：java.nio相关的包：
+		a:java.nio包:主要包含各种与Buffer相关的类。
+		b:java.nio.channels包:主要包含各种与Channel和Selector相关的类。
+		c:java.nio.charset:主要包含与字符集相关的类
+		d:java.nio.channels.spi:主要包含与Channel相关的服务提供者编程接口。
+		e:java.nio.charset.spi:主要包含与字符集相关的服务提供者编程接口。
+
+		3: Channel通道和Buffer缓冲是Nio中的两个核心对象，Channel是对传统IO的模拟。
+            所有的NIO系统中所有的数据都需要通过通道传输，Channel与传统的InputStream和OutputStream
+            最大的区别在于他提供了一个map()方法，通过map方法可以直接将一块数据映射到内存中，如果说传统的Ios是面向流的处理，而NIO是面向快的处理。
+		    Buffer可以被理解成一个容器，它的本质是一个数组，发送数据到Channel中的所有对象都必须首先放到Buffer中，
+		    而从Channel中读取的数据也必须向放到Buffer中。
+
+		Buffer:ByteBuffer,CharBuffer,IntBuffer,LongBuffer,FloatBuffer,LongBuffer
+
+
+
+
+

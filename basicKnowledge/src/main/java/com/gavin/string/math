@@ -1,0 +1,121 @@
+算术计算
+Math.sqrt() : 计算平方根
+Math.cbrt() : 计算立方根
+Math.pow(a, b) : 计算a的b次方
+Math.max( , ) : 计算最大值
+Math.min( , ) : 计算最小值
+Math.abs() : 取绝对值
+
+System.out.println(Math.sqrt(16)); // 4.0
+System.out.println(Math.cbrt(8)); // 2.0
+System.out.println(Math.pow(3, 2)); // 9.0
+System.out.println(Math.max(2.3, 4.5));// 4.5
+System.out.println(Math.min(2.3, 4.5));// 2.3
+
+/**
+ * abs求绝对值
+ */
+System.out.println(Math.abs(-10.4)); // 10.4
+System.out.println(Math.abs(10.1)); // 10.1
+
+进位
+Math.ceil(): 天花板的意思，就是逢余进一
+Math.floor() : 地板的意思，就是逢余舍一
+Math.rint(): 四舍五入，返回double值。注意.5的时候会取偶数
+Math.round(): 四舍五入，float时返回int值，double时返回long值
+
+
+/**
+* ceil天花板的意思，就是逢余进一
+ */
+System.out.println(Math.ceil(-10.1)); // -10.0
+System.out.println(Math.ceil(10.7)); // 11.0
+System.out.println(Math.ceil(-0.7)); // -0.0
+System.out.println(Math.ceil(0.0)); // 0.0
+System.out.println(Math.ceil(-0.0)); // -0.0
+System.out.println(Math.ceil(-1.7)); // -1.0
+
+System.out.println("-------------------");
+
+/**
+ * floor地板的意思，就是逢余舍一
+ */
+System.out.println(Math.floor(-10.1)); // -11.0
+System.out.println(Math.floor(10.7)); // 10.0
+System.out.println(Math.floor(-0.7)); // -1.0
+System.out.println(Math.floor(0.0)); // 0.0
+System.out.println(Math.floor(-0.0)); // -0.0
+
+System.out.println("-------------------");
+
+/**
+ * rint 四舍五入，返回double值 注意.5的时候会取偶数 异常的尴尬=。=
+ */
+System.out.println(Math.rint(10.1)); // 10.0
+System.out.println(Math.rint(10.7)); // 11.0
+System.out.println(Math.rint(11.5)); // 12.0
+System.out.println(Math.rint(10.5)); // 10.0
+System.out.println(Math.rint(10.51)); // 11.0
+System.out.println(Math.rint(-10.5)); // -10.0
+System.out.println(Math.rint(-11.5)); // -12.0
+System.out.println(Math.rint(-10.51)); // -11.0
+System.out.println(Math.rint(-10.6)); // -11.0
+System.out.println(Math.rint(-10.2)); // -10.0
+
+System.out.println("-------------------");
+
+/**
+ * round 四舍五入，float时返回int值，double时返回long值
+ */
+System.out.println(Math.round(10)); // 10
+System.out.println(Math.round(10.1)); // 10
+System.out.println(Math.round(10.7)); // 11
+System.out.println(Math.round(10.5)); // 11
+System.out.println(Math.round(10.51)); // 11
+System.out.println(Math.round(-10.5)); // -10
+System.out.println(Math.round(-10.51)); // -11
+System.out.println(Math.round(-10.6)); // -11
+System.out.println(Math.round(-10.2)); // -10
+
+
+【注意】这里有一个非常需要注意的一点是：这里所有进位的方法的入参都要保证是float或者double类型，否则进位方法将毫无意义。
+例如如下我们经常犯的错误：
+int a = 1300, b = 1000;
+System.out.println(Math.ceil(a / b));  // 1  表达式A(错误使用)
+System.out.println(Math.ceil(a / (float)b));  // 2 表达式B(正确使用)
+
+看上去表达式A和表达式B没有什么区别，可仔细分析可知：a / b = 1 ，
+而 a / (float)b = 1.3， 实际上表达式A的Math.ceil()根本起不了任何作用。
+
+随机数
+Math.random(): 取得一个[0, 1)范围内的随机数
+System.out.println(Math.random()); // [0, 1)的double类型的数
+System.out.println(Math.random() * 2);//[0, 2)的double类型的数
+System.out.println(Math.random() * 2 + 1);// [1, 3)的double类型的数
+
+
+
+java.util.Random类用法
+    ①、该类的构造方法：
+          Random():构造一个无参的随机数生成器。使用系统时间的毫秒作为默认种子。
+          Random(long seed):使用long数据类型的种子构造一个随机数生成器。
+    ②方法摘要：
+          boolean nextBoolean():返回下一个伪随机数，它是取自此随机数生成器序列的均匀分布的 boolean值。
+          double nextDouble():返回下一个伪随机数，它是取自此随机数生成器序列的、在 0.0 和 1.0 之间均匀分布的 double 值。
+          float nextFloat():返回下一个伪随机数，它是取自此随机数生成器序列的、在 0.0 和 1.0 之间均匀分布的 float 值。
+          int nextInt():返回下一个伪随机数，它是此随机数生成器的序列中均匀分布的 int 值.
+         int nextInt(int n):返回一个伪随机数，它是取自此随机数生成器序列的、在 0（包括）和指定值n（不包括）之间均匀分布的 int 值。
+          long nextLong():返回下一个伪随机数，它是取自此随机数生成器序列的均匀分布的 long 值。
+          void setSeed(long seed):使用单个 long 种子设置此随机数生成器的种子。
+          注意：如果用相同的种子创建两个 Random 实例，则对每个实例进行相同的方法调用序列，它们将生成并返回相同的数字序列。
+
+
+
+
+
+
+
+
+
+
+

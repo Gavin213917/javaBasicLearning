@@ -1,0 +1,5 @@
+
+className = com.gavin.reflect.fanshe.application.Student
+
+className = com.gavin.reflect.fanshe.application.Student2
+methodName = show

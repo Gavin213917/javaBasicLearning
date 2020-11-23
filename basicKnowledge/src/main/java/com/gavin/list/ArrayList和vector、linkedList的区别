@@ -1,0 +1,43 @@
+
+	ArrayList和Vector作为List接口的两个典型的子类，支持List所有的方法全部功能。
+	
+	1:ArrayList和Vector类都是基于数组实现的，它们底层动态数组的拷贝(Arrays.copyof(Object[] arr,int len))来实现。当向它们添加元素超过该数组的长度时，
+	它们的initCapacity会自动增加。
+	
+	2:在实际开发过程中，程序员无须关心ArrayList和Vector的initCapacity，但如果向ArrayList和Vector集合中添加大量元素时，
+	可以使用ensureCapacity(int initCapacity)方法一次性添加长度，从而提高性能。
+	
+	3:如果我们已经知道ArrayList和Vector集合要保存多少个元素，可以直接指定数组的长度。
+	它们两者在用法上几乎是一摸一样的，但是vector是一种古老的集合类，在jdk1.0就存在了，但是Java还没有提供系统的集合框架，索引Vector提供的一些方法名都非常的不合理。
+	例如:addElement(Object c)，和现在的add(Object c)实际上是一样的，从jdk1.2以后提供了系统的集合框架体系，把Vector改为实现List接口，作为List的实现之一。
+	从而导致了很多方法的重复。
+	
+	4:它们两者的显著区别是：
+	ArrayList是线程不安全的，当多个线程在访问同一个ArrayList集合时，会出现数据丢失和串行的问题。我们可以通过Collections的工具类实现同步
+	Vector是线程安全的，还提供了一个子类Stack（栈）是一种后进先出的机制。因为Stack是继承Vector性能较差，所以在开发过程中我们尽量少使用Stack去开发功能。
+	可以使用ArrayQueue去实现和替代.
+	
+	
+	LinkedList类是List的链表集合，它除了了有集合的List的特征以外还有，可以根据索引来随机访问集合的元素，除此之外还现象了Dequ接口，可以当做双端队列来使用
+	因此被当做栈，也可以当做队列来使用。
+	
+	
+	LinkedList作为集合，双端队列，栈的用法合成，作为集合它是一个非常强大的集合类。
+	
+	LinkedList与ArrayList，ArrayQueue的实现机制完全不同，ArrayList，ArrayQueue内部都是使用数组来保存集合的元素。因此在
+	随机访问集合元素时有较好的性能。而LinkedList内部已链表的形式保存集合元素，随机访问元素的性能较差，但是在插入，删除元素时性能比较
+	出色，虽然Vector也是以数组的形式来存储集合元素，但是它实现了线程同步，所以各方面性能都比较差。
+	
+	一般来说没有雨数组是以一块连续的内存区来保存所以的数组元素，所以数组随机访问上性能最好，而链表作为底层实现的集合在执行插入，删除上
+	有较好性能，但在总体上来说ArrayList的性能比LinkedList的性能要好，因此在大部分时候都应该考虑ArrayList.
+	
+	关于使用List的建议：
+	1:如果在遍历List集合上，建议使用ArrayList和Vector,因为LinkedList是链表实现的，他们采用的是Iterator的方式遍历集合元素。
+	
+	2:如果在经常执行插入，删除操作来改变包含大量的数据的时候，考虑使用LinkedList.因为使用ArrayList可能需要经常重新分配内部数组的长度，性能较差。
+	
+	3:除了Vector是线程安全，其他都是非线程安全的包括LinkedList,但是Vector又是历史遗留，不推荐使用，如果要保证线程安全都可以使用
+	Collections. Collections.synchronizedList(List list);
+	
+	
+	

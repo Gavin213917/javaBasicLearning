@@ -6,7 +6,6 @@ package com.gavin.date;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +16,7 @@ import java.util.*;
  *
  * @version 2014-4-15
  */
-public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
+public class DateUtils1 extends org.apache.commons.lang3.time.DateUtils {
 
     public static String[] parsePatterns = {"yyyy-MM-dd",
             "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM", "yyyy/MM/dd",
@@ -541,7 +540,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
         Date date1 = dateFormat1.parse(startRq);
         Date date2 = dateFormat1.parse(endRq);
-        return DateUtils.getDaysBetweenTwoDaysStr(date1, date2, format);
+        return DateUtils1.getDaysBetweenTwoDaysStr(date1, date2, format);
     }
 
 
@@ -707,7 +706,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         SimpleDateFormat sf = new SimpleDateFormat(dateFormat);
         Date date = null;
         try {
-            if (DateUtils.isValidDate(strDate, dateFormat)) {
+            if (DateUtils1.isValidDate(strDate, dateFormat)) {
                 date = sf.parse(strDate);
             }
         } catch (ParseException e) {
@@ -866,7 +865,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             }
         }
         if (tempStr != null && tempStr.toString().trim().length() > 0) {
-            returnDate = DateUtils.parseDate(tempStr.toString());
+            returnDate = DateUtils1.parseDate(tempStr.toString());
         }
         return returnDate;
     }

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <style>
+	div{width:100px;height:100px;background:#999;margin:10px auto;text-align:center;
+		color:#fff;
+		font-size:36px;
+		line-height:100px;
+		cursor:pointer;
+	}
+  </style>
+ </head>
+ <body>
+  
+	<div id="box">1</div>
+	<div id="box2">2</div>
+	<div id="box3">3</div>
+	<script type="text/javascript">
+		//回调函数-- 都是属于javascript函数进阶的内容，一般应用于组件和开发和封装
+		//如果基础先掌握，比较了解和认识一下。
+		//一直坚持学习函数===作用域===
+
+		//即时函数，私有函数，闭包，都是为解决作用域的问题
+		window.onload = function(){
+			/*第一种写法
+				var boxDom = document.getElementById("box");
+				boxDom.onclick = function(){
+					this.style.background = "red";
+				};
+
+				var boxDom2 = document.getElementById("box2");
+				boxDom2.onclick = function(){
+					this.style.background = "green";
+				};
+
+				var boxDom3 = document.getElementById("box3");
+				boxDom3.onclick = function(){
+					this.style.background = "pink";
+				};
+
+			*/
+
+
+			//变量，函数，参数名字
+			function clickMe(id,callback){
+				var boxDom = document.getElementById(id);
+				boxDom.onclick = function(){
+					if(callback){
+						callback(this);
+					}
+				};
+			};
+			//宽度和高度变成400 * 400 并且颜色变成红色。，边框变成4限速黑色
+
+			//你如果把函数当前数据
+			clickMe("box",function(obj){
+				obj.style.width = 200+"px";
+				obj.style.height = 200+"px";
+				obj.style.background = "red";
+				obj.style.border="4px solid #111";
+			});
+
+			//drag
+
+			//我执行一个跳转页面的需求,window.location.href = "http://www.baidu.com";
+			clickMe("box2",function(obj){
+				window.location.href = "http://www.baidu.com";
+			});
+
+			//我要执行计算1+1=2
+			clickMe("box3");
+
+
+
+
+		}
+
+
+	</script>
+ </body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>潭州学院-keke老师QQ:792185203</title>
+  <style>
+	*{padding:0;margin:0}
+	a{text-decoration:none;color:#fff}
+	ul,li{list-style:none}
+	body{font-size:12px;font-family:"微软雅黑"}
+  </style>
+ </head>
+ <body>
+	
+	<input type="text" id="a"/> 
+	<select id="op">
+		<option selected="selected" value='+'>+</option>
+		<option value='-'>-</option>
+		<option value='*'>*</option>
+		<option value='/'>/</option>
+		<option value='%'>%</option>
+	</select>	
+	<input type="text" id="b"/>
+	<input type="text" id="result"/>
+
+	<input type="button" onclick="test()" value="计算"/>
+
+	<script type="text/javascript">
+		/*
+			
+			//:函数两种定义的区别?
+			function sum(a,b){
+				return a + b;
+			};
+			var c = sum(1,2);
+
+
+			var sum2 = function(a,b){
+				return a+b
+			};
+
+			sum2();
+
+			//:函数应用在什么地方?====事件---就是执行函数过程的一种回调
+			//:函数参数理解?
+			function test(a,b){
+			/*var args = arguments;
+				var c = 0;
+				for(var i=0;i<args.length;i++){
+					c+=args[i];
+				}
+				var c = a+b;
+				return c;
+			};
+
+			var cc = test(1,2);
+			alert(cc);
+				
+			//:函数有重载吗？没有重在，没有定义具体数据类型，所有数据都内部进行转换了。
+			
+
+
+			//下次:函数的生命周期,闭包，回调函数等等，
+			
+
+		*/
+
+		function test(){
+			var a = document.getElementById("a").value *1;
+			var b = document.getElementById("b").value *1;
+			var op =  document.getElementById("op").value;
+			var c = eval(a+op+b);
+			document.getElementById("result").value = c;
+		}
+
+	
+		
+
+	
+		
+
+
+	
+
+	
+
+		
+
+		
+
+	
+	</script>
+ </body>
+</html>

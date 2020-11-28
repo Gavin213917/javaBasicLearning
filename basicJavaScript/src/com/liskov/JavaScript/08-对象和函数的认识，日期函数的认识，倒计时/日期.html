@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+ </head>
+ <body>
+	
+	
+	<script type="text/javascript">
+		//object--Date--万年历，时间的倒计时，时钟，时间切换皮肤，布置一个作业：北京时间，东京市，纽约时间，巴黎时间
+
+		window.onload = function(){
+			var date = new Date();
+			//alert(date);// date.toString()
+			//alert(date.constructor)
+
+			/*object 
+				array object && constructor.indexOf("Array")!=-1
+				date  object && constructor.indexOf("Date")!=-1
+				RegExp object && constructor.indexOf("RegExp")!=-1
+				{}  [object object]*/
+
+			var year = date.getYear();
+			var fullYear = date.getFullYear();
+			var month = date.getMonth() + 1;//0第一月 11第十二月
+			var d = date.getDate();
+			//时分秒
+			var hour = date.getHours();
+			var min = date.getMinutes();
+			var sec = date.getSeconds();
+
+			//星期数
+			var week = date.getDay();//0星期天 一周第一天是星期日.最后一天是星期六
+			//alert(fullYear+"年"+month+"月"+d+"日"+" "+hour+":"+min+":"+sec+"=="+week)
+			
+			//毫秒 0 - 99 -->1
+			var mi = date.getMilliseconds();
+			//alert(mi)
+
+				
+
+			//获取毫秒数---1970 1 1 0 0 0--当前时间差
+			var time = date.getTime();
+
+			//日期的构造函数
+			//var date = new Date(year,month,date);
+			//var date = new Date(year,month,date,week,hour,minutes,second,msss);
+
+		};
+		
+
+	</script>
+ </body>
+</html>

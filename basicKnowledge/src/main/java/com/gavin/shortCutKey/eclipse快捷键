@@ -1,0 +1,14 @@
+alt + shift +s  getter\setter 方法
+Ctrl + o  查看当前类中所有的属性和方法
+Ctrl + l  定位行
+Ctrl + f  当前类搜索
+ctrl+shift+r 快速的搜索和检索文件---开头匹配，不能中间匹配
+ctrl+shift+o  导入包
+ctrl+shift+f  格式化
+Ctrl + 1 批量重命名
+Ctrl + h 全局修改名字
+ctrl+1 ---enter---输入名字---enter--修改
+ctrl+h---file search---输入关键词---search--修改
+ctrl+h---file search---输入关键词---replace--替换--自动保存
+ctrl+shif+s 全局保存
+ctrl+s 保存

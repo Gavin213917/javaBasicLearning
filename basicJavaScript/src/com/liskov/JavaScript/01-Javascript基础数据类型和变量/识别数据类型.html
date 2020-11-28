@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>潭州学院-keke老师QQ:792185203</title>
+  <style>
+	*{padding:0;margin:0}
+	a{text-decoration:none;color:#fff}
+	ul,li{list-style:none}
+	body{font-size:12px;font-family:"微软雅黑"}
+	#box{width:200px;height:100px;background:red;}
+
+  </style>
+ </head>
+ <body>
+	
+	<div id="box"></div>
+	<script type="text/javascript">
+
+		//日记打印
+		function log(content){
+			if(console){
+				console.log("【你运行的结果是：】"+content)
+			}else{
+				alert("【你运行的结果是：】"+content);
+			}
+		};
+
+		/*
+			javascript:数据类型有：
+			string:字符串:定义规则：双引号或者单引号引起来就是字符串。比如 var s  = "keke"; var ss ="12";
+			var f = "false";
+			number:数字 0 ,1,2,4.1;-1234,0.63,-78,-7.8
+			object:对象 {}
+			   Array数组
+			   null空
+			   Date日期
+			   Regex正则
+			function  函数 
+			undefined 空对象 undefinde和null的却别
+			boolean:布尔类型(true/false),一般应用逻辑判断，循环 true/false
+
+			如果你查看一个数据类型的具体的类型：typeof 变量名称;
+
+
+			算法运算符：（）优先级最高
+			1：+加法(加法) 连接符(字符串相加的连接符)
+			2：如果是两个数字字符串还是字符串连接符，但是对于 * / % 运算
+			   比如 var a = "2"	; var b = "3";
+			   log(a+b);//23
+			   log(a*b)//6
+			   log(a/b)//0.6666
+			   log(a%b)//2
+			赋值运算符： = 
+			递增递减：++ -- 名称 前++和后++的区别(--同理)
+
+		*/
+
+		//十进制：逢十进一  0 1 2 3 4 5 6 7 9  
+		//八进制：逢八进一0 1 2 3 4 5 6 7 ,定义方式：一个数字以0开头就是八进制
+		//十六进制:0-9 a-f  如果是一个0x开头就是十六进制
+		var a = 100;
+		log(typeof a);
+		//toString可以禁止转换 toString(2/8/10/16)
+		var b = parseInt(255).toString(16);
+		var c = parseInt(255).toString(8);
+		var cc = 0377;//八进制----十进制---二进制
+		var dd = 0xff;
+
+
+		log("0377:"+typeof cc);
+		log("0xff:"+typeof dd+"==="+dd.toString(10));
+		log("78.5e+3:"+ 78.5e+3);
+		log("2e-3:"+ 0.78e-3);
+
+
+		//指数2e+3 2e-3
+
+		//无穷数 作业去了解数字无穷数 infinity NaN
+		//怎么产生 NaN  一个字符串去 除以，乘以一个数字的时候就得到了NaN
+
+		function getColor(r,g,b){
+			var rr = parseInt(r).toString(16);
+			var gg = parseInt(g).toString(16);
+			var bb = parseInt(b).toString(16);
+			return "#"+rr+gg+bb;
+		}
+
+		function getRandomColor(){
+			var rr = parseInt(Math.floor(Math.random()*256)).toString(16);
+			var gg = parseInt(Math.floor(Math.random()*256)).toString(16);
+			var bb = parseInt(Math.floor(Math.random()*256)).toString(16);
+			return "#"+rr+gg+bb;
+		}
+
+		var c = getRandomColor();
+		document.getElementById("box").style.background = c;
+
+	</script>
+ </body>
+</html>

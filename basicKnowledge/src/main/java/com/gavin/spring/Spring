@@ -1,0 +1,1240 @@
+
+一、
+1.搭建spring 环境
+下载 jar包，地址
+https://maven.springframework.org/release/org/springframework/spring/4.3.9.RELEASE/spring-framework-4.3.9.RELEASE-dist.zip
+
+开发spring至少需要使用的jar 包（5个+1个）：
+
+spring-aop.jar 开发aop 需要的jar
+
+spring-beans.jar 处理bean 的jar
+
+spring-context.jar  处理spring 上下文的jar
+
+spring-core.jar  spring 核心的jar
+
+spring-expression.jar  spring 表达式
+
+三方提供的日志jar
+
+common-logging.jar 日志jar
+
+
+IOC（控制反转）也可以称之为DI（依赖注入）
+控制反转：将 创建对象、属性赋值 的方式 进行了反转，从 new 、setXxx() 反转为了 从 springIOC 容器 getBean()
+依赖注入：将属性值 注入给了属性 将属性 注入给了 bean ，将bean 注入给了 ioc 容器
+
+总结：ioc/id ，无论要什么对象，都可以直接去springIoc 容器中获取，而不需要自己操作（new 、setXxx()）
+
+因此之后的ioc分为2步：1、先给springIoc 中存放对象并赋值    2、拿
+
+IOC容器赋值：如果是简单类型（8个基本+String），用 value；
+		     如果是对象类型，用ref="需要引用的id值"
+		  因此实现了 对象与对象之间的依赖关系（依赖注入）
+
+context.getBean(需要获取的bean的id值)
+
+依赖注入的3种方式：
+
+1、set注入：赋值，默认调用的是set方法（set方式的依赖注入），依赖注入的底层是通过反射来实现的。
+			关键字：<property name="" value="">
+
+2、构造器注入（通过构造方法赋值）
+			关键字：<constructor-arg value="" name="" type="" index="">
+	当<constructor-arg> 与构造方法的参数顺序不一致时，通过 	name="" type="" index="" 来指定顺序
+
+3、通过 p 命名空间注入(引入命名空间)
+	<bean id="course" class="com.gavin.entity.Course" p:courseName=""...>
+	简单类型 ：p:属性名="属性值"
+	引用类型（String 除外）： p:属性名-ref="应用的id"
+
+
+给对象类型赋值null：
+<property name="name"><null/></property> 注意 没有<value>
+
+在ioc中 定义bean 的前提：改bean 的类 必须提供了 无参构造
+
+4、自动装配（引用类型 -ref，简单类型不能自动装配），约定优于配置
+	<bean id="course" class="com.gavin.entity.Course" autowire="byName|byType|constructor">  byName 本质是 byId
+	Course 类中有一个 ref 属性 teacher（属性名） ，并且改 ioc 容器中恰好有一个 bean 的id 的名字也叫teacher
+	bean 的 id值 = 类的属性名
+
+byName：自动寻找   其他bean 的 id值 = 改 Course 类的属性值
+byType：其他 bean 的类型（class） 是否 与 该 Course 类的 ref 属性类型一致
+注意：此种方式 必须满足 当前ioc容器中 只能有一个 bean 满足条件
+
+constructor：其他 bean 的类型（class） 是否 与 该 Course 类的 构造方法参数 的 类型一致，本质和byType 一样
+
+可以在头文件中 一次性将 该 ioc 容器中的所有bean 统一设置成自定装配：
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	...
+	default-autowire="byName">
+
+自动装配虽然可以减少代码量，但是会降低程序的可读性，使用时需要谨慎。
+
+
+使用注解来定义bean ---通过注解的形式 将 bean 以及相应的属性值 放入ioc 容器
+
+配置扫描器
+<context:component-scan base-package="com.gavin.dao" /> spring 在启动的时候，
+
+    会 根据 base-package 在该包中扫描所有的类，查找这些类是否有注解（@Component("studentDao")）,
+  如果有，则会将该类加入 ioc 容器。
+  @Component("studentDao") = <bean id="studentDao" class="com.gavin.dao.StudentDao">
+
+ @Component 细化
+
+ dao层注解：@Repository
+ service 层注解：@Service
+ 控制器层注解：@Controller
+
+ 二、
+ 使用注解实现事务（声明式事务）
+ 目标：通过事务，使 以下方法 要么全成功 要么 全失败
+ public void addStudent(){
+ 		crud - 增删改查
+ }
+
+ 1、jar 包
+ spring-tx.jar
+ ojdbc.jar（数据库的驱动）
+ commons-dbcp.jar(数据库连接池使用的数据源)
+ commons-pool.jar(连接池)
+ spring-jdbc.jar
+ aopalliance.jar
+
+2、配置
+jdbc/mybatis/spring
+a、增加事务 tx 的命名空间
+
+<!-- 配置数据库相关事务 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:ORCL"/>
+        <property name="username" value="scott"/>
+        <property name="password" value="tiger"/>
+        <property name="maxActive" value="10"/>--最大连接数
+        <property name="maxTdle" value="6"/>--最大空闲时间
+	</bean>
+
+
+	<!-- 配置事务管理器 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+
+	</bean>
+
+
+	<!-- 增加对事务的支持 -->
+	<tx:annotation-driven transaction-manager="txManager"/>
+
+
+3、使用（使用注解来使用）
+	将需要 成为事务的方法前增加注解：@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+
+   @Transactional(propagation=Propagation.REQUIRED) ：如果有事务, 那么加入事务, 没有的话新建一个(默认情况下)
+　　@Transactional(propagation=Propagation.NOT_SUPPORTED) ：容器不为这个方法开启事务
+　　@Transactional(propagation=Propagation.REQUIRES_NEW) ：不管是否存在事务,都创建一个新的事务,原来的挂起,新的执行完毕,继续执行老的事务
+　　@Transactional(propagation=Propagation.MANDATORY) ：必须在一个已有的事务中执行,否则抛出异常
+　　@Transactional(propagation=Propagation.NEVER) ：必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
+　　@Transactional(propagation=Propagation.SUPPORTS) ：如果其他bean调用这个方法,在其他bean中声明事务,那就用事务.如果其他bean没有声明事务,那就不用事务.
+
+
+第三、
+
+AOP(切面类)一些名词解释
+
+切面(Aspect):一个横切功能的模块化，这个功能可能会横切多个对象（业务）。
+			例如：aMethod() 方法就是一个 "切面"，他横切到了多个业务之中
+
+切入点(Pointcut):可以插入"横切逻辑(如：aMethod() 方法)"的方法。
+			例如："调用add()"就是一个切点
+
+通知(advice):
+	前置通知(before advice)：在切点add()方法之前执行，插入的通知
+	后置通知(after returning advice)：在切点add()方法之后执行，插入的通知
+	异常通知(after throwing advice)：在切点add()方法抛出异常的时候，插入的通知
+	最终通知(after finally advice)：在切点add()方法执行完毕时，插入的通知（无论是正常放回还是异常退出）
+	环绕通知(around advice)：可以贯穿切入点add()方法执行的整个过程
+
+
+将一个普通的类  ----->   变成一个特定功能的类   ---->  (a、继承   b、实现接口  c、注解  d、配置)
+
+	类 ---->  通知
+
+	通知类型					需要实现的接口									接口中的方法					执行时机
+	前置通知		org.springframework.aop.MethodBrforeAdvice				before()					目标方法执行前
+
+	后置通知		org.springframework.aop.AfterReturningAdvice			afterReturning()			目标方法执行前
+
+	异常通知		org.springframework.aop.ThrowsAdvice					无							目标方法发生异常时
+
+	环绕通知		org.springframework.intercept.MethodIntercepter			invoke()					拦截对目标方法调用，即调用目标方法的整个过程
+
+
+
+
+
+前置通知实现的步骤：
+
+1、jar 包：
+	aopalliance.jar
+	aspectj weaver.jar
+
+2、配置
+
+	<!-- addStudent()所在方法 -->
+	<bean id="studentService"  class="com.gavin.service.StudentServiceImpl">
+			<property name="studentDao" ref="studentDao"></property>
+	</bean>
+
+	<!-- 前置通知类==== 连接线的一方-->
+	<bean id="logBefore" class="com.gavin.aop.LogBefore"></bean>
+
+	<!-- 将addStudent() 和 通知进行关联 -->
+	<aop:config>
+
+		<!-- 配置切入点（在哪里执行通知） ====连接线的另一方 业务类的具体方法-->
+		<aop:pointcut expression="execution(* com.gavin.service.StudentServiceImpl.addStudent(com.gavin.entity.Student)" id="pointcut"/>
+
+		<!-- advisor：相当于连接切入点和切面的线 =====连接线-->
+		<aop:advisor advice-ref="logBefore" pointcut-ref="pointcut"/>
+	</aop:config>					左边  						右边
+
+
+异常通知：根据异常通知接口的定义可以发现，异常通知的实现类，必须编写以下方法：
+		public void afterThrowing([Method,args,target],ThrowableSubclass);
+
+环绕通知：在目标方法前后、异常发生时、最终等各个地方都可以进行的通知，最强大的一个通知；invoke.process();
+	可以获取目标方法的 全部控制权（目标方法是否执行、执行之前、执行之后、参数、返回值等）
+在使用环绕通知时，目标方法的一切信息 都可以通过invocation参数获取到，环绕通知，底层是通过拦截器实现的
+
+
+表达式 expression 的常见示例
+
+public boolean addStudent(com.gavin.entity.Student)-----所有返回类型为Boolean、参数类型为com.gavin.entity.Student的addStudent()方法
+
+public boolean com.gavin.service.IStudentService.addStudent(com.gavin.entity.Student)-----
+		com.gavin.service.IStudentService类（或者接口）中的addStudent()方法，并且返回类型是Boolean、参数类型是com.gavin.entity.Student
+
+public *  addStudent(com.gavin.entity.Student)-----"*" 代表认意返回类型
+
+public void *(com.gavin.entity.Student)-----"*" 代表任意方法名
+
+public void  addStudent(..)-----".." 代表认意参数列表
+
+* com.gavin.service.IStudentService.*.*(..)-----com.gavin.service.IStudentService包中，包含的所有方法（不包含子包中的方法）
+
+* com.gavin.service.IStudentService..*.*(..)-----com.gavin.service.IStudentService包中，包含的所有方法（包含子包中的方法）
+
+3、编写
+
+	每当执行add()方法之前，自动执行的一个方法log();
+	add() 业务方法；
+	log() 自动执行的通知，即aop 前置通知
+
+
+第四、 使用注解实现通知 ， aop
+
+1、导jar 包
+	aopalliance.jar
+	aspectj weaver.jar
+
+2、配置
+将业务类、通知 纳入 springIOC 容器
+	a、开启注解对AOP的支持   <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+	b、 需要开启扫描 <context:component-scan base-package="com.gavin.aop" />
+	扫描器 会将 指定的包中的 @Component @Service @Repository  @Controller 修饰的类产生的对象 增加到springIOC容器中。
+	@Aspect 不需要加入扫描器，只需要开启即可。
+
+	c、通过注解形式 实现的aop ， 如果想获取 目标对象的一些参数 ， 则需要使用一个对象：JoinPoint（固定的）
+
+    d、定义切入点（一端）、定义通知类（另一端），通过pointcut-ref 将两端连接起来
+
+	e、注解形式的返回值(需要声明)
+		@AfterReturning(pointcut="execution(public *  addStudent(..))",returning="returningValue")
+
+		@AfterThrowing(pointcut="execution(public *  addStudent(..))",throwing="e")
+		public void myException(JoinPoint jp,NullPointException e){}
+
+3、编写
+	@Before ---前置通知
+	@AfterReturning---后置通知
+	@Around---环绕通知 ---用 ProceedingJoinPoint
+	@AfterThrowing---异常通知
+	@After---最终通知
+
+通知：
+@Aspect ---> 声明一个普通类 变为 通知类（不需要实现接口）
+@Before("execution(public *  addStudent(..))")--->加在方法上，表示前置通知
+@AfterReturning("execution(public *  addStudent(..))")--->加在方法上，表示后 置通知
+@Component("logAnnotation")--->加上该注解的类表示纳入到 springIOC 容器中（任意层）。
+	该注解 = <bean id="logAnnotation" class="com.gavin.aop.logAspectAnnotation"></bean>
+
+
+第五、通过配置 将 类---> 通知
+
+关于 Schema 配置，类似与实现接口的方式
+
+接口方式： public class LogSchema implements AfterReturningAdvice{}
+
+Schema方式：JoinPoint适用于注解和Schema 方式，获取目标对象参数的信息
+	a、编写一个普通类  public class LogSchema{}
+	b、将该类 通过配置 ，转为一个 "通知"
+		1、将准备转为通知的类 纳入 IOC 容器
+		<bean id="LogSchema" class="com.gavin.aop.LogSchema" />
+		2、在applicationContext.xml里面配置
+		<aop:config>
+
+			<aop:pointcut expression="execution(* com.gavin.service.StudentServiceImpl.addStudent(com.gavin.entity.Student)" id="pointcut"/>
+			<!--Schema 配置-->
+			<aop:aspect ref="logSchema">
+				<aop:before method="before" pointcut-ref="pointcut"/>
+				<aop:after-returning method="afterReturning" returning="returnValue" pointcut-ref="pointcut"/>
+				<aop:after-throwing method="whenException" throwing="e" pointcut-ref="pointcut"/>
+			</aop:aspect>
+		</aop:config>
+
+
+第五
+	1、spring 开发web 项目 以及 拆分 spring 配置文件
+
+spring 开发web 项目
+
+a、web项目如何初始化springIOC 容器：当服务（tomcat...）启动时，通过 监听器 将springIOC 容器初始化一次
+监听器：监听 tomcat 是否启动，一旦启动，立刻实例化一个IOC 容器对象
+
+	public class MyListener extends/implements Listener{
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+	}
+通过导入 spring-web.jar 包，就相当于做了以上操作
+
+因此用spring 开发web 项目 至少需要 7个jar 包 ---spring-java的6个jar + spring-web.jar
+
+web 项目启动时，会自动加载web.xml 文件，因此需要在 web.xml 中加载 监听器 （IOC 容器初始化）
+
+<!-- 指定 IOC容器（applicationContext.xml）的位置-->
+  <context-param>
+  		<!-- 监听器的父类ContextLoader 中有一个属性 contextConfigLocation,该属性值保存着 容器配置文件applicationContext.xml的位置-->
+  		<param-name>contextConfigLocation</param-name>
+  		<!-- classpath 就相当于 src目录 -->
+  		<param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+
+
+  <listener>
+  		<!-- 配置 spring-web.jar 提供的监听器，此监听器 可以在服务器启动时 初始化 IOC 容器
+  			初始化IOC容器（applicationContext.xml），
+  			1、必须告诉监听器此容器的位置：context-param
+  			2、放在约定的位置即默认的位置，默认是在 WEB-INF 下面，名字必须为applicationContext.xml
+  		-->
+  		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+
+拆分 spring 配置文件
+
+Java 项目：
+	applicationContext1.xml
+	applicationContext2.xml
+	applicationContext3.xml
+	ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext1.xml");
+你要哪个，加载哪个
+
+web 项目：
+	根据什么拆分？
+	1、三层结构
+		UI层（前台 html/css/jsp    后台 servlet）applicationController.xml
+		service层 ---applicationService.xml
+		dao 层---applicationDao.xml
+		公共配置 （数据库...）---applicationDB.xml
+	2、功能结构：
+		学生相关配置 applicationContextStudent.xml <bean id="..."  class="...">
+		班级相关配置 applicationContextClass.xml
+
+合并：如何将多个配置文件合并在一起
+	1、加载：web.xml 里面
+		<context-param>
+	  		<!-- 监听器的父类ContextLoader 中有一个属性 contextConfigLocation,该属性值保存着 容器配置文件applicationContext.xml的位置-->
+	  		<param-name>contextConfigLocation</param-name>
+	  		<!-- classpath 就相当于 src目录 -->
+	  		<param-value>
+	  			classpath:applicationContext.xml,
+	  			classpath:pplicationContext-Service.xml,
+	  			classpath:applicationContext-Dao.xml
+	  		</param-value>
+  		</context-param>
+
+	2、classpath:applicationContext-*.xml---使用通配符（推荐使用）
+
+
+	3、在web.xml 里面加载主配置文件
+			<param-value>
+	  			classpath:applicationContext.xml
+	  		</param-value>
+
+	在主文件 applicationContext.xml 中 引入 <import resource="pplicationContext-Service.xml"/>  多个 就用通配符 <import resource="pplicationContext-*.xml"/>
+
+
+bean 的实例化、DI 是保存在 springIOC 容器中，但是 每一次 request 是请求 servlet 容器（web 容器，tomcat 容器）
+
+Java项目中：ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext1.xml");
+
+web项目中：ApplicationContext context = webApplicationContextUtils.getWebApplicationContext(this.getServletContext);
+
+-------------------------------------SSM------------------------------------------------------------------------------
+Spring - Mybatis    Struts2  SpringMvc  dubbo   Quartz   Hibernate
+
+思路：SqlSessionFactory --> SqlSession --> StudentMapper --> CRU
+
+可以发现，mybatis 最终是通过 SqlSessionFactory 来操作数据库的
+	Spring 整合 Mybatis 其实就是 将 Mybatis 的 SqlSessionFactory 对象，交给SpringIOC 容器来管理
+
+整合步骤：
+1、jar 包
+	mybatis-spring.jar
+	spring-tx.jar--事务jar
+	spring-jdbc.jar
+	spring-expression.jar
+	spring-context-support.jar
+	spring-core.jar
+	spring-context.jar
+	spring-beans.jar
+	spring-aop.jar
+	spring-web.jar--wen项目
+	commons-logging.jar
+	commons-dbcp.jar
+	ojdbc.jar
+	mybatis.jar
+	log4j.jar
+	commons-pool.jar
+
+2、类-表（自己创建）
+
+3、mybatis配置文件---conf.xml
+
+4、通过mapper.xml 将 类和表 建立映射关系
+
+5、之前是使用 mybatis 的 conf.xml --> 来 获取 SqlSessionFactory 的数据库信息
+	现在整合的时候，需要通过spring 管理 SqlSessionFactory，因此产生的SqlSessionFactory 所需要的数据库信息，不放入 conf.xml，而需要放在spring的配置文件中
+
+
+加载db.properties文件
+<bean>
+	<property name="locations" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+			<array>
+				<value>classpath:db.properties</value>
+			</array>
+	</property>
+</bean>
+
+配置数据库信息，代替mybatis的配置文件 conf.xml(通过 dbcp 事务会自动提交，jdbc 需要手动提交)
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+        <property name="maxActive" value="${maxActive}"/>--最大连接数
+        <property name="maxIdle" value="${maxIdle}"/>--最大空闲时间
+	</bean>
+
+在springIOC 容器中创建 mybatis 的核心类 SqlSessionFactory
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--加载 mybatis 配置文件-->
+        <property name="configLocations" value="classpath:conf.xml"/>
+    </bean>
+
+
+6、使用 Spring - Mybatis 整合产物开发程序
+
+	目标：通过spring 产生 mybatis 最终操作需要的 动态 mapper 对象（studentMapper 对象）
+
+Spring 产生 动态 mapper 对象 有3种方法：
+	a、通过 dao 层实现类  继承 SqlSessionDaoSupport 类
+			 SqlSessionDaoSupport 类 提供了一个属性 SqlSession
+
+	<!-- dao 层  第一种方式生成 mapper 对象
+	<bean id="StudentMapper" class="com.gavin.dao.impl.StudentDaoImpl">
+			 将spring配置的sqlSessionFactory 对象交给mapper（dao）
+			<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+
+	b、就是省略掉 a 方式的 实现类，通过 使用 mybatis 提供的一个mapper实现类：org.mybatis.spring.mapper.MapperFactoryBean
+		缺点：每个mapper 都需要配置一次
+
+	<!--第二种方式生成 mapper 对象
+	 <bean id="StudentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+			<property name="mapperInterface" value="com.gavin.mapper.StudentMapper"></property>
+			<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+
+	c、批量配置实现类
+
+	<!--
+	  	第3种方式生成 mapper 对象(批量产生多个mapper)
+	  	批量产生Mappers 对在springIOC 种的 id值默认就是首字母小写接口名（首字母小写接口名=id值）
+	  -->
+	 <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+			<!-- 指定批量产生 哪个包的 mapper 对象 -->
+			<property name="basePackage" value="com.gavin.mapper"></property>
+	</bean>
+
+
+注解形式的依赖注入
+
+@Autowired  //自动装配 byType
+private StudentMapper studentMapper;
+
+	<!-- service 层 -->
+	<bean id="studentService" class="com.gavin.service.impl.StudentServiceImpl">
+			<property name="studentMapper" ref="studentMapper"></property>
+	</bean>
+
+使用了@Autowired 那么在spring的主配置文件applicationContext.xml中就不用 配置service层了，如上
+
+
+@Repository("stuDao")  通过名字注入 ，byName---dao层
+
+@Autowired
+@Qualifier("stuDao")
+private StudentMapper studentMapper;---service层
+
+
+------------------------------------------------------------------------------------------------
+SpringIOC　容器？  -----做两件事 ---存 bean  取 bean
+２种形式：---   获取的ioc 容器是独立的
+
+	a、xml配置文件：applicationContext.xml ，配置bean 的信息
+		存 bean---<bean id="" class=""/>
+		取 bean:ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+				context.getBean();
+
+	b、注解：带有@Configuration 注解的类（配置类---MyConfig）
+
+		存 bean：@Bean 注解+ 方法的返回值
+			@Configuration
+			public class MyConfig {
+
+				@Bean //id="myStudent"  id 默认就是方法名（首字母小写）
+				public Student myStudent() {
+					return new Student();
+				}
+			}
+
+		CTRL+alt+b--查实现类/ CTRL+f12
+		取 bean: ApplicationContext context1 = new AnnotationConfigApplicationContext(MyConfig.class);
+				context1.getBeanDefinitionNames();//获取ioc所有的bean的id
+
+
+XXXX:注解形式 给IOC 容器中存放bean：
+	1、必须有 带有@Configuration 注解的类（配置类---MyConfig）
+
+	2、形式：
+		a、@Bean 注解+ 方法的返回值
+
+		b、三层组件
+			b-1：给三层组件 分别加注解（@Controller、@Service、@Repository ---一个顶三个，通用型 @Component）
+			b-2：将注解所在包 纳入 ioc扫描器  ComponentScan
+
+					有两种：① xml 配置   <context:component-scan base-package="com.gavin.dao" />
+
+						 ② 注解  	@Configuration
+						 		@ComponentScan(value="com.gavin.dao")
+								public class MyConfig{}
+
+
+			b-3:给扫描器指定规则：
+				过滤类型；FilterType(annotation,assignable_type,custom)
+
+				annotation:（@Controller、@Service、@Repository ---一个顶三个，通用型 @Component）
+				includeFilters：包含，有默认行为，可以通过 userDefaultFilters= false 来禁止
+                excludeFilters：排除
+                component-scan：只对三层组件负责
+
+                assignable_type：指的是具体的类(StudentService.class)
+                区分：
+                    annotation：StudentService.class 指的是标有 @Controller 注解的类
+                    assignable_type：指的是具体的类(StudentService.class)
+
+				custom：自定义规则--type=FilterType.CUSTOM
+				includeFilters={@ComponentScan.Filter(type=FilterType.CUSTOM,value=MyFilter.class)} 自定义扫描器
+
+				//实现 TypeFilter 重写 match 方法
+				public class MyFilter implements TypeFilter {
+                    @Override
+                    public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
+
+                        ClassMetadata classMetadata = metadataReader.getClassMetadata();
+                        //扫描器扫描"com.gavin" 包中所有的类getClassName() 可以拿到该包中所有标三层注解，类的名字
+                        String className = classMetadata.getClassName();//所有的类名
+
+                        //只过滤出 和学生相关的三层组件
+                        if(className.contains("Student")){
+                            return true;
+                        }
+
+                        return false;
+
+                    }
+                }
+
+
+				@Configuration
+				@ComponentScan(value="com.gavin.dao",excludeFilters={@ComponentScan.Filter(type=FilterType.ANNOTATION,value=Service.class)})
+				@ComponentScan(value="com.gavin.dao",includeFilters={@ComponentScan.Filter(type=FilterType.ANNOTATION,value=Service.class,userDefaultFilters = false)})
+				@ComponentScan(value="com.gavin.dao",includeFilters={@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE,value=StudentService.class)})
+                @ComponentScan(value="com.gavin.dao",includeFilters={@ComponentScan.Filter(type=FilterType.CUSTOM,value=MyFilter.class)})
+				public class MyConfig{}
+
+
+
+
+		c、非三层组件（非三层注解，比如 Student.class,IntToStringConvert.calss）
+		    1、@bean+方法的返回值，id 就是默认的方法名 （可以通过@Bean("stu")修改id 值）
+		    2、@import、
+		    3、FactoryBean（工厂bean）
+
+
+
+    bean 的作用域问题：
+        singleton：单例（默认值），在每个springIOC 容器中，一个bean定义对应一个对象实例
+        	<bean id="Student" class="com.gavin.entity.Student" scope="singleton"/>
+
+        prototype：一个bean定义对应多个对象实例(原型、多实例)
+            	<bean id="Student" class="com.gavin.entity.Student" scope="prototype"/>
+
+        request：在一个HTTP session 中，一个bean 定义对应一个实例。即每次HTTP请求将会有各自的bean实例，他们依据某个bean定义创建而成。该作用域仅在基于web 的spring ApplicationContext的情况下有效
+        session：在一个HTTP session 中，一个bean 定义对应一个实例。该作用域仅在基于web 的spring ApplicationContext的情况下有效
+        global session：在一个全局的 HTTP session中，一个bean 定义对应一个实例，典型情况下，仅在使用portlet context的时候有效。该作用域仅在基于web 的spring ApplicationContext的情况下有效
+
+        scope：singleton ，prototype
+        执行时机（产生bean的时机）
+            singleton：容器在初始化时，就创建对象（只创建一次），以后在getBean 时，不会产生新的，singleton也支持延迟加载（懒加载），在第一次使用时产生，@Lazy 注解
+            prototype：容器在初始化时，不创建对象，只是在每次使用时（每次从容器中获取对象时，context.getBean("")）,在创建对象，并且每次getBean（）都会创建一个新的对象
+
+    条件注解  springBoot
+            可以让某一个Bean 在某些条件下 加入 IOC 容器，其他情况下不加入IOC容器
+            a、准备Bean
+            b、增加条件Bean：给每个Bean设置条件，必须实现Condition 接口
+
+            --条件类，需要设置虚拟机参数，VM options: -Dcar.type=oil，路径 run--debug configuration
+            public class OilConditionCar implements Condition {
+                //如果当前环境是oil，则加入oilCar
+                @Override
+                public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
+
+                    //获取环境
+                    Environment environment = conditionContext.getEnvironment();
+                    String carType = environment.getProperty("car.type");//car.type = "oil"
+
+                    if(carType.contains("oil")){
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            配置类--myConfig
+                @Bean
+            	@Conditional(OilConditionCar.class)
+            	public Car oilCar(){
+            		return new OilCar();
+            	}
+
+            c、根据条件加入IOC 容器
+
+    --回顾给IOC加入bean的方法
+            全在注解@Configuration 配置中设置
+                三层组件：扫描器+三层注解
+                非三层组件：1、@Bean+返回值
+                          2、@Import
+                          3、FactoryBean（工厂bean）
+
+            @import使用：
+                1、直接编写到 @Import 中，id 值 = 全类名
+                  @Configuration
+                  @Import({Apple.class,Banana.class})
+
+                2、自定义 通过 ImportSelector 接口的实现类，通过selectImports 方法实现(方法的返回值就是要纳入IOC容器的bean)，并告知程序自己编写的实现类
+
+            public class MyImportSelector implements ImportSelector {
+
+                @Override
+                public String[] selectImports(AnnotationMetadata annotationMetadata) {
+                    return new String[]{"com.gavin.entity.Apple"};//返回值就是要加入 IOC容器的bean的全类名
+                }
+            }
+
+            --并告知程序自己编写的实现类
+            @Configuration
+            @Import({MyImportSelector.class})
+
+                3、编写ImportBeanDefinitionRegistrar 接口的实现类，并重写其方法
+
+                public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
+
+                    @Override
+                    public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
+
+                        BeanDefinition definition = new RootBeanDefinition(Apple.class);
+                        BeanDefinition definition2 = new RootBeanDefinition("com.gavin.entity.Apple");
+
+                        beanDefinitionRegistry.registerBeanDefinition("myApple",definition);//id class
+                    }
+                }
+
+                --并告知程序自己编写的实现类
+                @Configuration
+                @Import({MyImportBeanDefinitionRegistrar.class})
+
+            --FactoryBean（工厂bean）
+                1、准备bean 实现接口，重写方法
+
+                public class MyFactoryBean implements FactoryBean {
+
+                    @Override
+                    public Object getObject() throws Exception {
+                        return new Apple();
+                    }
+
+                    @Override
+                    public Class<?> getObjectType() {
+                        return Apple.class;
+                    }
+
+                    @Override
+                    public boolean isSingleton() {
+                        return true;
+                    }
+                }
+
+                2、注册bean 加入注册bean--MyConfig
+                @Bean
+                public FactoryBean<Apple> myFactoryBean(){
+                    return new MyFactoryBean();
+                }
+
+                Object obj = context.getBean("myFactoryBean");
+                System.out.println(obj);--拿到的是Apple 对象
+
+                Object obj = context.getBean("&myFactoryBean");
+                System.out.println(obj1);--拿到的是MyFactoryBean对象
+
+                --此时上面拿到的有两个对象 MyFactoryBean（外层）、Apple（内层）
+            注意：在容器里面拿对象的时候，需要通过 & 来区分获取的对象是哪一个，不加 & 获取的是最内部的真实的Apple，
+                    加了 & 则获取的是 MyFactoryBean 对象
+
+
+
+    ----bean 的生命周期：初始化（init）、创建并使用、销毁（destroy）调用context.close()方法
+    方法一：@Bean+返回值方式
+    xml:<bean id="Student" class="com.gavin.Student" init-method="myInit" destroy-method="myDestroy" />
+    注解：@Bean（value="stu",initMethod="myInit",destroy-method="myDestroy"）
+    IOC 容器在初始化时，会自动创建对象（构造方法）---> init --->...--->当容器关闭时，调用 destroy
+
+    方法二：三层组件形式：扫描器+三层注解（功能性注解）
+    Java规范：JSR250
+    @PostConstruct--初始化
+    @PreDestroy--销毁
+
+    1、 给相应组件加注解，如下
+    2、如果要获取@Component注解中的bean，那么该bean的名字就是@Component(value = "myConverter")的value值
+
+    @Component(value = "myConverter")
+    public class MyIntToStringConverter {
+        @PostConstruct
+        public void init(){
+            System.out.println("初始化。。。");
+        }
+
+        public void myConverter(){
+            System.out.println("转换。。。");
+        }
+
+        @PreDestroy
+        public void destroy(){
+            System.out.println("销毁。。。");
+        }
+
+    }
+
+    方法三：接口的形式--适用于三层组件--两个接口
+        InitializingBean--初始化
+        DisposableBean--销毁
+
+    @Component
+    public class MyFunction implements InitializingBean,DisposableBean {
+
+        public void method(){
+
+        }
+
+        @Override
+        public void afterPropertiesSet() throws Exception {
+            System.out.println("MyFunction..init...");
+        }
+
+        @Override
+        public void destroy() throws Exception {
+            System.out.println("MyFunction...destroy");
+        }
+    }
+
+
+    注意：如果是注解形式，随便写一个方法，然后加上相应的注解即可
+        如果是接口形式，必须实现接口中规定的方法
+
+    方法四：接口的形式--适用于三层组件--一个接口
+        接口：BeanPostProcessor：拦截了所有容器中的bean（给容器中的所有bean加初始化和销毁）
+
+    @Component
+    public class MyFunction2 implements BeanPostProcessor {
+
+        @Override
+        public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+            System.out.println("初始化:"+beanName+":"+bean);
+            System.out.println("MyFunction2...初始化");
+            //可以在拦截的时候修改bean的信息
+            if(bean instanceof Student){
+                Student student = (Student) bean;
+                student.setStuName("xxx");
+                return student;
+            }
+            return bean;
+        }
+
+        @Override
+        public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+            System.out.println("销毁:"+beanName+":"+bean);
+            System.out.println("MyFunction2...销毁");
+            return bean;
+        }
+    }
+
+
+----自动装配：三层组件（4个注解+扫描器）
+    @Autowired （controller---service--dao）
+    通过该注解从IOC容器中，根据类型自动注入（没有调用set 方法）
+    如果@Autowired在属性前标注，则不调用setXXX();方法；如果标注在setXXX()方法上，则调用，
+    三层组件的形式不能放在方法的参数前，
+        但是@Bean+返回值的形式，可以放在方法参数前（可以省略，但不建议这样做，可阅读性差）,也可以放在方法前
+        （构造方法：特殊--如果只有一个有参构造方法，则构造方法前的@Autowired 也可以省略）
+
+    ---不调用setXXX();方法
+    @Autowired //从ioc 容器中，寻找一个 类型StudentMapper（StudentDao）的 bean（根据类型）
+    private StudentMapper studentMapper;
+
+    ---调用setXXX();方法
+    @Autowired
+    public void setStudentMapper(StudentMapper studentMapper) {
+        this.studentMapper = studentMapper;
+    }
+
+----@Autowired 根据类型匹配：
+    ---三层组件形式和@Bean+返回值形式
+        1、如果有多个类型相同的，匹配哪个？
+            会报错，只能有一个,可以默认使用哪一个，加注解@Primary
+            @repository("stuDao")
+            @Primary
+        2、能否根据名字匹配？
+            可以，加注解@Qualifier("stuDao1")
+        3、如果有0个类型相同，默认报错，可以修改成不注入（null），@Autowired(required=false)
+
+
+    自动注入方式一：@Autowired--spring-beans.jar 提供，默认根据类型匹配
+    自动注入方式二：@Resource--JSR250、Java规范提供，默认根据名字匹配
+                    如果有名字则先根据名字查找，如果没找到，则根据类型查找
+                    @Resource--有 name（根据名字找）、type（根据类型找--class）等属性，@Resource(name="")
+    自动注入方式三：@Inject--JSR330 提供，需要额外引入jar包，javax.inject.jar,默认根据类型匹配
+
+
+---利用Spring底层组件进行开发
+        能够供我们使用的组件，都是Aware 的子接口，即ApplicationContextAware：
+        步骤：
+        1、实现 XxxxAware 接口
+        2、重写其中的方法，都包含了一个对象，只需要将该对象，赋值到属性中即可
+    有什么用：例如 ApplicationContextAware，可以获得 IOC 容器对象
+    执行时间：如果在main()函数中 new IOC 容器：先执行ApplicationContextAware实现类中的方法，
+            通过该方法传入IOC容器 供我们自己使用；然后再将这容器通过new 返回给用户
+
+    @Component("MyComponent")   //id = name
+    public class MyComponent implements ApplicationContextAware,BeanNameAware {
+        private ApplicationContext applicationContext;
+        private String beanName;
+
+        @Override
+        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+            this.applicationContext = applicationContext;
+        }
+
+        @Override
+        public void setBeanName(String name) {
+            this.beanName=name;
+            System.out.println("获取当前bean的name:"+name);//获取当前bean的name:MyComponent
+        }
+    }
+
+
+---环境切换：@Profile
+        Spring：切换环境
+
+--激活方式一：
+
+    Java虚拟参数配置：
+        -Dspring.profiles.active=@Profile 环境名
+        -Dspring.profiles.active=myApple
+        可用于配置切换数据库环境
+
+        @Profile("myApple")
+        @Bean("apple")
+        public Apple myApple(){
+            return new Apple();
+        }
+
+--激活方式二：
+    硬编码（代码）
+    坑：报错，错误写法
+    ApplicationContext context1 = new AnnotationConfigApplicationContext(MyConfig.class);
+    ConfigurableEnvironment environment = (ConfigurableEnvironment) context1.getEnvironment();
+    environment.setActiveProfiles("MyApple");
+
+    其中 ConfigurableEnvironment 中 有一个 refresh() 刷新操作，会将我们设置的一些参数还原。
+    没激活--刷新还原点--> 进行激活 ---> 刷新 ---> 没激活
+
+    流程调整：
+        没激活--->进行激活 --刷新还原点--> 刷新
+
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+    //激活
+    ConfigurableEnvironment environment = (ConfigurableEnvironment) context1.getEnvironment();
+    environment.setActiveProfiles("MyApple");
+    //刷新还原点（保存点）
+    context.register(MyConfig.class);
+    //ioc容器在使用时必须要刷新，如果是有参构造，程序自动刷新，如果是无惨构造，则需要手动刷新
+    context.refresh();
+
+---spring 内部重要组件
+
+1、接口 BeanPostProcessor ：拦截了所有容器中具体的bean
+2、BeanFactoryPostProcessor：拦截容器
+    public class MyXxx implements BeanFactoryPostProcessor {
+
+        @Override
+        public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    //            beanFactory.getBeanDefinition("");//根据bean的名字（id）获取bean
+            int count = beanFactory.getBeanDefinitionCount();
+            System.out.println("容器中bean的个数："+count);
+            String [] names = beanFactory.getBeanDefinitionNames();//name-->id <bean id="">
+            System.out.println(Arrays.asList(names));
+        }
+    }
+
+3、BeanDefinitionRegistryPostProcessor：即将被加载之前（解析之前，BeanDefinition对象之前）
+
+@Component
+public class MyXxx implements BeanDefinitionRegistryPostProcessor {
+
+    //BeanDefinitionRegistryPostProcessor 接口自己的方法（维护着容器中所有bean的注册信息）
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        System.out.println("容器中注册的bean的数量"+registry.getBeanDefinitionCount());
+    }
+
+    //继承自 BeanFactoryPostProcessor 的方法（bean 的工厂）
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
+    }
+}
+
+
+---顺序
+
+    1、BeanDefinitionRegistryPostProcessor（a）：即将被加载之前
+    2、--> 加载bean
+    3、--> BeanFactoryPostProcessor（b）：拦截容器
+    4、--> 实例化bean
+    5、--> BeanPostProcessor ：拦截了所有容器中具体的bean
+
+--同一个方法在不同地方（类、接口）的出现时机问题：a 继承 b，因此a中必然包含b中的方法，记为c，虽然a和b中都有c，但是c出现的时机不同，所以执行顺序也不一样
+如果在a中出现则先执行，如果在b中出现则后执行
+
+
+--在同一个地方（类、接口），不同的方法的出现时机：
+
+@Component
+public class MyXxx implements BeanDefinitionRegistryPostProcessor {
+
+    //BeanDefinitionRegistryPostProcessor 接口自己的方法
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        System.out.println("{先执行}容器中注册的bean的数量"+registry.getBeanDefinitionCount());
+
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Apple.class);//产生 BeanDefinition
+        //builder.getBeanDefinition();//AbstractBeanDefinition
+        //额外增加一个：postProcessBeanDefinitionRegistry（可以为容器额外增加一些bean的注册）
+        registry.registerBeanDefinition("myBean",builder.getBeanDefinition());
+
+    }
+
+    //继承自 BeanFactoryPostProcessor 的方法
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        System.out.println("{后执行}容器中注册的bean的数量"+beanFactory.getBeanDefinitionCount());
+
+        Object myBean = beanFactory.getBean("myBean");
+        System.out.println(myBean.getClass().getName());
+    }
+}
+
+----spring 组件 ---监听器 -- 实现ApplicationListener接口
+    监听的对象必须是 ApplicationEvent 自身或者其子类以及子接口
+
+要让spring 识别自己，必须加入到IOC容器中（@Bean+返回值 、 三层注解+扫描器）
+
+方式一：实现ApplicationListener接口
+
+//监听器
+@Component
+public class MyListener implements ApplicationListener {
+
+    //监听对象
+    @Override
+    public void onApplicationEvent(ApplicationEvent applicationEvent) {
+         System.out.println(applicationEvent);
+    }
+}
+
+方式二：加注解(理论上可以监听任意类，但是建议 监听的对象是 ApplicationEvent 自身或者其子类以及子接口)
+    @Component
+    public class MyListener {
+
+        //本方法是一个监听方法
+        @EventListener(classes = {ApplicationEvent.class})
+        public void myListenerMethod (ApplicationEvent event) {
+            System.out.println(event);
+        }
+    }
+
+---自定义事件
+    1、实现ApplicationListener接口
+    2、发布事件
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        //创建一个事件，并且发布
+        context.publishEvent(new ApplicationEvent("my event") {
+
+        });
+
+
+----Quartz ：定时任务
+        任务：做什么事情....StudentService
+
+        触发器：定义时间(CronScheduleBuilder)
+
+        调度器：将任务、触发器、一一对应
+
+
+1、导入jar 包 --quartz-2.x-distribution.tar.gz
+    c3p0.jar
+    log4j.jar
+    quartz.jar
+    quartz-jobs.jar
+    slf4j-api.jar
+    slf4j-log4j.jar
+
+2、任务（service）--实现 job 接口
+
+public class PlanJob implements Job {
+
+	MeetingService meetingService = new MeetingService();
+
+	@Override
+	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+		// 存放 计划执行的任务
+		meetingService.calClassMeeting();
+	}
+
+}
+
+3、Job+ 触发器--定义执行的时间  + 调度器
+
+代码示例：
+---------MeetingService
+public class MeetingService {
+
+	public void calClassMeeting() {
+
+		// 任务是并发的（异步任务，相当于5个线程），没有串行关系
+		System.out.println("需要提醒的任务（召开会议）。。。。");
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}//每个任务休眠 5秒
+//		System.out.println("end....");
+
+	}
+
+}
+
+--------------------------PlanJob
+import com.gavin.service.MeetingService;
+
+public class PlanJob implements Job {
+
+	MeetingService meetingService = new MeetingService();
+	// jobExecutionContext 可以获取 设置的各种参数值
+
+	@Override
+	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
+		TriggerKey triggerKey = jobExecutionContext.getTrigger().getKey();
+
+		JobKey jobKey = jobExecutionContext.getJobDetail().getKey();
+
+		System.out.println(triggerKey + "\n" + jobKey);
+
+		JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
+		List<String> infos = (List<String>) jobDataMap.get("infos");
+		System.out.println(infos);
+
+		// 存放 计划执行的任务 ， 任务是并发的（异步的，相当于5个线程），没有串行关系
+		meetingService.calClassMeeting();
+	}
+
+}
+
+--------------------
+
+//xxxBuilder -->  withIdentity("meeting Job","group1")   --> xxx 对象
+public class TestQuartz {
+	public static void main(String[] args) throws SchedulerException, InterruptedException, ParseException {
+		JobBuilder jobBuilder = JobBuilder.newJob(PlanJob.class);
+
+		// 1、产生实际能用的job √
+		JobDetail jobDetail = jobBuilder.withIdentity("meeting Job", "group1").build();
+
+		// 向Job 的 execute() 中传入一些参数
+		JobDataMap jobDataMap = jobDetail.getJobDataMap();
+		List<String> names = Arrays.asList(new String[] { "1", "2", "3" });
+		jobDataMap.put("infos", names);
+
+		// 2、触发器：时间规则 ，依赖2个对象（TriggerBuilder ， Schedule） ctrl+alt+b 查看实现类
+		TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
+		triggerBuilder = triggerBuilder.withIdentity("meeting trigger", "group1");
+		// triggerBuilder.startNow();// 当满足条件时立刻执行，并不是立刻执行
+
+		// 在指定的时间范围内执行
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date start = sdf.parse("2020-02-17 16:19:00");
+		Date end = sdf.parse("2020-02-17 16:19:50");
+		triggerBuilder.startAt(start);
+		triggerBuilder.endAt(end);
+
+		// scheduleBuilder：定义执行的周期（时机）
+		SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+		scheduleBuilder.withIntervalInSeconds(1);// 每个一秒执行一下
+		scheduleBuilder.withRepeatCount(10);// 重复执行 10次
+
+		// 产生触发器 √
+		SimpleTrigger trigger = triggerBuilder.withSchedule(scheduleBuilder).build();
+
+		// 3、调度器（工厂产生调度器）
+		SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+		// 产生调度器
+		Scheduler scheduler = schedulerFactory.getScheduler();
+
+		// 4、通过 调度器 将 任务 和 触发器 一一对应 √
+		scheduler.scheduleJob(jobDetail, trigger);
+		scheduler.start();// 开始
+
+		Thread.sleep(10000);
+		scheduler.shutdown();// 立刻关闭
+
+//		scheduler.shutdown(false);//立刻关闭
+//		scheduler.shutdown(true);//将当前任务执行完毕在关闭
+
+	}
+
+}
+
+--------------------------------------------------------------------
+
+CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("5 * * * * ? *");
+CronTrigger trigger = triggerBuilder.withSchedule(cronScheduleBuilder).build();
+
+触发器：CronScheduleBuilder
+
+Cron表达式：
+	6-7 个参数，以空格隔开
+
+1	秒  		0-59       				，  - * /
+2	分钟		0-59					，  - * /
+3	小时		0-23					，  - * /
+4	天（月份中的第几天） 1-31				，  - * /	？ L
+5	月份		1-12					，  - * /
+6	天（星期中的第几天）1-7 （1代表星期天，、7代表星期六） ，  - * / ？ L #
+7	年份		1970-2099				，  - * /
+
+0 0 8 ? * L---每个月的每周六 8：00
+秒 分  时  天  月  天
+
+，: 表示列举枚举值。例如：在 “分钟” 元素使用 “5，20” ，表示在 “第5分钟、第20分钟” 各触发一次
+
+-: 表示范围。5-20 表示 第5分钟到第20分钟内，每分钟触发一次
+
+*:表示匹配该元素的所有值。
+
+/:如 A/B ：表示A时刻开始触发，然后每隔B时间都触发一次
+
+?:只能用于 “月份中的第几天” 和 “星期几” 两个元素，表示 不指定值。当这两个元素之一被指定了值之后，为了避免冲突，需要将另一个元素的值设为 ？
+
+L:“Last” 的简称，表示最后。只能用于 “月份中的第几天” 和 “星期几” 两个元素。例如：0 0 8 ? * L---每个月的每周六 8：00    0 0 0 ? * 1L---当月的最后一个星期天
+
+#:只能用于“星期几”一个元素，表示当月的第几个星期几。例如： 4#2---当月第2个星期三
+
+
+----------------------------------------------------------------------------------------------------
+
+-----spring 整合 quartz----job \ 触发器 \ 调度器
+    触发器先整合job，调度器在整合触发器---调度器----> 触发器(job、执行时间)
+
+1、导包：
+    spring基础包（spring-context-support.jar/spring-tx.jar）+quartz
+
+spring-aop.jar 开发aop 需要的jar
+spring-beans.jar 处理bean 的jar
+spring-context.jar  处理spring 上下文的jar
+spring-core.jar  spring 核心的jar
+spring-context-support.jar
+spring-tx.jar
+
+log4j.jar
+quartz.jar
+quartz-jobs.jar
+slf4j-api.jar
+slf4j-log4j.jar
+
+2、
+    a、将Job 信息封装到一个实体类中
+    b、spring 配置文件
+
+
+
+
+
+
+
+
+
+
+
+
+

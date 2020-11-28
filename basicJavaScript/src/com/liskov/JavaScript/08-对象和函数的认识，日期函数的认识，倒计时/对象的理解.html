@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <style>
+	*{padding:0;margin:0}
+	body{font-size:14px;font-family:"微软雅黑";padding:100px;}
+	table{width:100%;border-collapse:collapse}
+	table td{border:1px solid #ccc;padding:10px;}
+  </style>
+ </head>
+ <body>
+  
+	<table>
+		<thead>
+			<tr>
+				<td>姓名</td>
+				<td>年龄</td>
+				<td>地址</td>
+				<td>描述</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody id="tbody"></tbody>
+	</table>
+	
+
+	<script type="text/javascript">
+		//object === json---一种数据格式就是var obj = {};
+
+		//对象定义，获取，修改，删除，循环，属性的查找
+
+		//json-string  string--json
+		
+		//对象转字符串，字符串转对象---只有对象才能给属性赋值的权利和调用方法的权利
+
+		//只有对象才操作属性和方法
+		//能够被点的前面一定是对象
+		var json = {
+			width:"100px",
+			height:"200px",
+			border:"2px solid red",
+			background:"green"
+		};
+
+		var order = {
+			orderNumber:"tz121215456",
+			price:12.5,
+			num:100,
+			total:1250
+		};
+		//将对象转换成字符串 JSON.stringify(obj)
+		var string = JSON.stringify(json);
+		//alert(string)
+		//从后台返回就是json字符串
+		var jsonString = '{"username":"keke","age":10}';
+		var json2 = JSON.parse(jsonString);
+		//alert(json2.username+"==="+json2.age);
+		//应用阶段，怎么理解对象数组，
+		
+			
+		var tbody = document.getElementById("tbody");
+		var xiaowu = {
+			username:"小五",
+			age:16,
+			mark:true,
+			address:"长沙",
+			listen:function(){
+				alert(this.username+"==="+this.age+"==="+this.address+"在听课");
+			}
+		};
+		
+		var pengpeng = {
+			username:"鹏鹏",
+			age:11,
+			address:"杭州",
+			listen:function(){
+				alert(this.username+"==="+this.age+"==="+this.address+"在听课");
+			}
+		};
+
+	
+
+		var dabao = {
+			username:"大宝",
+			age:12,
+			address:"北京",
+			listen:function(){
+				alert(this.username+"==="+this.age+"==="+this.address+"在听课");
+			}
+		};
+
+		var arr = [];
+		arr.push(xiaowu);
+		arr.push(pengpeng);
+		arr.push(dabao);
+		//alert(JSON.stringify(arr));
+		arr.sort(function(a,b){
+			var avalue = a.age;
+			var bvalue = b.age;
+			return  avalue - bvalue;
+		});
+
+		for(var i=0;i<arr.length;i++){
+			var data = arr[i];
+			tbody.innerHTML +="<tr>"+
+		"	<td>"+data.username+"</td>"+
+		"	<td>"+data.age+"</td>"+
+		"	<td>"+data.address+"</td>"+
+		"	<td>"+data.address+"</td>"+
+		"	<td>操作</td>"+
+		"</tr>";
+		};
+
+
+		//要么排序，反转，统一循环放入到目标元素中
+		var content = {
+			title:"习近平访美查看IT行情",
+			content:"2014年习近平访美查看IT行情，做飞机前面.....",
+			subtitle:"坐飞机",
+			time:"2015-11-1 12:15:22",
+			author:"keke",
+			hits:10,
+			isDelete:0,
+			img:"http://images.huxiu.com/article/cover/201512/11/173106241500.png?",
+			attchments:["aaa.txt","bbb.gif","ccc.jpg"],
+			mark:true,
+			price:121.5,
+			comemnts:[
+				{title:"太刁了",username:"keke",img:"1aaa.gif",content:"1士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"1太刁了",username:"keke1",img:"2aaa.gif",content:"2士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"2太刁了",username:"keke2",img:"3aaa.gif",content:"3士大夫士23423大夫是的",time:"2015-12-12 12:12"},
+				{title:"3太刁了",username:"keke3",img:"4aaa.gif",content:"4士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"4太刁了",username:"keke4",img:"5aaa.gif",content:"5士大夫4234士大夫是的",time:"2015-12-12 12:12"},
+				{title:"5太刁了",username:"keke5",img:"6aaa.gif",content:"6士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"6太刁了",username:"keke6",img:"7aaa.gif",content:"7士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"7太刁了",username:"keke7",img:"8aaa.gif",content:"8士大夫士大夫是的",time:"2015-12-12 12:12"}
+			],
+			author:{username:"稀烂",age:16,address:"上海"}
+		};
+		
+		//做开发面对解析对象(json)，三部曲
+		//第一步：看数据类型是什么
+		//alert(typeof content); 直接去对象获取属性即可,
+		//第二步：如果不是对象，那么就用JSON.parse转成对象
+		//var jsonstring = "{\"username\":\"keke\",\"age\":20}";
+		//var jsonstring = '{"username":"keke","age":20}';
+		//var json = JSON.parse(jsonstring);
+		//var json = eval("("+jsonstring+")");
+		//alert(json.username)
+
+		/*function parse(jsonstring){
+			if(JSON.parse){
+				return JSON.parse(jsonstring);
+			}else{
+				return eval("("+jsonstring+")");
+			}
+		};*/
+		
+		//第三步：进行解析
+
+		//对象应用于插件的参数中。减少参数的定义变得更加的灵活
+
+	</script>
+ </body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>潭州学院-keke老师QQ:792185203</title>
+  <style>
+	*{padding:0;margin:0}
+	a{text-decoration:none;color:#fff}
+	ul,li{list-style:none}
+	body{font-size:12px;font-family:"微软雅黑"}
+	#box{width:100px;height:100px;background:red;position:absolute;top:0;left:0}
+  </style>
+ </head>
+ <body>
+	
+	<div id="box"></div>
+	
+	<script type="text/javascript">
+		/*
+			位移动画：left,top定位
+			动画：
+		*/	
+
+		(function(){
+			var y = 0;
+			var x = 0;
+			var speed = 10; 
+			var xtep = speed;
+			var ytep = speed;//动画 速度 + -是决定方向
+			var boxDom = document.getElementById("box");
+			//获取浏览器的宽度和高度
+			function draw(){
+				var maxwidth = window.innerWidth - boxDom.offsetWidth;
+				var maxheight= window.innerHeight - boxDom.offsetHeight;
+				y+=ytep;
+				x+=xtep;
+				if(x >=maxwidth){
+					xtep = -speed;
+					x= maxwidth;
+				}
+
+				if(x <=0){
+					xtep = speed;
+					x= 0;
+				}
+
+				//y如果大于width
+				if(y >=maxheight){
+					ytep = -speed;
+					y= maxheight;
+				}
+
+				if(y <=0){
+					ytep = speed;
+					y= 0;
+				}
+				
+				boxDom.style.left = x+"px";
+				boxDom.style.top = y+"px";
+			};
+
+			setInterval(function(){
+				draw();
+			},1000/30);
+		})();
+
+	</script>
+
+ </body>
+</html>

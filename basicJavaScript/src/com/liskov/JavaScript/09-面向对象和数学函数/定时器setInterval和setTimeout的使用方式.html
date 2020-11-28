@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <style>
+	*{padding:0;margin:0}
+	body{font-size:14px;font-family:"微软雅黑";}
+	a{text-decoration:none;color:#3333}
+	#box{width:200px;height:200px;background:green;}
+  </style>
+ </head>
+ <body>
+	
+	<h1 id="timer"></h1>
+	<div id="box"></div>
+
+	
+	<a href="#" onclick="cplay()">启动</a>
+	<a href="#" onclick="cclose()">关闭</a>
+
+	
+	<script>
+		//通过定时器自动取执行函数就是setTimeout和setInterval
+		//setTimeout和setInterval的用法
+		//用法：setTimeout(fn,timer);
+		//定义的方式如下：
+		//var timer = setTimeout(change,3000);
+		//setTimeout("change()",3000);//不推荐使用，里面进行了一次eval
+		//setTimeout(function(){
+		//  change();
+		//},3000);
+		
+		//清除动画使用：clearTimeout(timer);
+
+		//注意点在开发中：一般的定时器一定要记得关闭的。
+
+		//setTimeout(change(),2000);///错误写法
+
+		//清楚动画：clearTimeout和clearInterval
+		//setInterval和for循环区别
+		
+		var timerDom = document.getElementById("timer");
+		time();
+		setInterval(function test(){
+			time();
+		},1000);
+
+		function time(){
+			var date = new Date();//当前日期 
+			var h = date.getHours();
+			var m = date.getMinutes();
+			var s = date.getSeconds();
+			timerDom.innerHTML = h+":"+m+":"+s;
+		}
+		
+
+
+
+
+		//1:三秒之后把box的w*h改成200*200,颜色设置红色,\
+		function change(){
+			var boxDom = document.getElementById("box");
+			boxDom.style.width = "400px";
+			boxDom.style.height = "400px";
+			boxDom.style.background = "red";
+		};
+		
+		var timer = null;
+		function cplay(){
+			if(timer)clearTimeout(timer);
+			timer = setTimeout(change,3000);
+		};
+
+		function cclose(){
+			if(timer)clearTimeout(timer);
+		};
+
+
+		//change();
+		//eval("change()");
+		
+		//var timer = 3000;
+		//setTimeout(function(){
+		//	change();
+		//},3000);
+		//setTimeout(change(),3000);//error
+		//setTimeout("change()",3000);//不建议写
+
+
+		function kekeTimeout(fn,timer){
+			var args = arguments;
+			var clearTimer = setTimeout(function(){
+				if(args.length>2){
+					var arr=[];
+					for(var i=2;i<args.length;i++){
+						arr.push(args[i]);
+					}
+					fn.apply(this,arr);
+				}else{
+					fn();
+				}
+			},timer);
+
+			return clearTimer;
+		};
+
+		function kekeClearTimeout(timer){
+			clearTimeout(timer);
+		};
+
+		function sum(a,b,c){
+			alert(a+b+c);
+		};
+
+		//var timer2 = kekeTimeout(sum,1000,100,100,88);
+		//kekeClearTimeout(timer2);
+	</script>
+ </body>
+</html>

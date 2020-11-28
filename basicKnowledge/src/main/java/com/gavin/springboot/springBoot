@@ -1,0 +1,515 @@
+微服务与springBoot
+    1、微服务：一个项目 可以由多个 小型服务构成
+    2、springboot 可以快速开发 微服务模块
+        优势：
+            a、简化j2ee开发
+            b、整个spring技术栈的整合（整合 springMVC、spring）
+            c、整个j2ee技术的整合（整合 mybatis 、struts2、redis）
+
+    3、准备
+        JDK:
+            JAVA_HOME:jdk根目录
+            path:jdk根目录\bin
+            classpath: .;JAVA_HOME\lib
+        maven:
+            MAVEN_HOME:maven 根目录
+            path：maven 根目录\bin
+            配置maven本地仓库：mvn根目录/conf/setting.xml
+
+    4、开发工具
+        eclipse（sts插件）---> sts
+        idea
+
+    目录结构resources：
+        static：静态资源（js、css、图片、音频、视频）
+        templates：模板文件（模板引擎 freemarker，thymeleaf；默认不支持jsp）
+        application.properties:配置文件
+
+        a、springBoot内置了tomcat，并且不需要打成war 在执行。
+        b、可以在 application.properties 端口号等服务端信息进行配置
+        c、springboot 将各个应用/三方框架 设置成一个个"场景" （starter），以后要用哪个，只需要引入哪个场景即可。
+           选完之后，springboot 就会将该场景所需要的所有依赖（jar包）自动注入。
+
+    5、@SpringBootApplication springboot 的主 配置类
+        该注解包含：
+            @SpringBootConfiguration---包含@Configuration，表示"配置类"（代替配置文件 spring.xml）
+                                    --1、该类是一个配置类，2、加了@Configuration注解的类，会自动纳入spring 容器（spring里面使用@Component）
+
+            @EnableAutoConfiguration--开启自动配置的功能，约定优于配置
+                	1、之前是需要写配置文件的--spring.xml、mybatisConfig.xml、springMVC.xml
+
+                	2、可以找到@SpringBootApplication 所在类的包；作用：就会将该包及所有子包，全部纳入spring容器
+                		//传统写法：com.gavin.springBoot2020.Controller 手动写到扫描器中（即加入spring容器）
+						//spring boot 自动配置，将 com.gavin.springBoot2020 及 com.gavin.springBoot2020.xxx 纳入到spring容器
+
+					3、springboot在启动时，会根据META-INF/spring.factories，找到相应的依赖，并将这些依赖引入
+
+			总结：编写项目时，一般会将自己写的代码 以及三方依赖进行配置，但是springboot可以自动进行配置
+				a、自己写的代码，springboot 通过 @SpringBootConfiguration 自动帮我们配置
+				b、spring-boot-autoconfigure-2.2.4.RELEASE.jar 中的 META-INF/spring.factories 进行声明，
+					然后通过@EnableAutoConfiguration开启使用即可，该jar包中包含了 J2EE整合体系中 需要的依赖
+				c、如何自动装配
+					@Configuration：1、标识此类是一个配置类  2、将此类纳入springMVC容器
+					@EnableConfigurationProperties(HttpProperties.class)通过 HttpProperties 将编码设置为UTF_8（即自动装配为UTF_8）
+					通过 HttpProperties 的 prefix+属性名 进行修改 ，在配置文件application.properties/yml 里面 spring.http.encoding.charset=GBK
+
+				d、@ConditionalOnProperty(prefix = "spring.http.encoding", value = "enabled", matchIfMissing = true)
+					当属性满足要求时，此条件成立，要求 spring.http.encoding.enabled = xxx,如果没有配置，则成立
+
+			总结：每一个XxAutoConfiguration 自动配置类，都有很多条件 @ConditionalOnXxx ，当这些条件都满足时，此配置自动装配生效，但是我们可以自己在配置文件中手动更改
+				全局配置文件中的 key ，来源于某个 properties 文件中 的 prefix+属性名
+
+			@Conditional 扩展注解                                     作用（判断是否满足当前的指定条件）
+				@ConditionalOnJava:系统的Java版本是否符合要求
+				@ConditionalOnBean:容器中存在指定的bean
+				@ConditionalOnMissingBean:容器中不存在指定的bean
+				@ConditionalOnExpression:满足SpEL表达式指定
+				@ConditionalOnClass:系统中有指定的类
+				@ConditionalOnMissingClass:系统中没有指定的类
+				@ConditionalOnSingleCandidate:容器中只有一个指定的bean，或者这个bean是首选bean
+				@ConditionalOnProperty:系统中指定的属性是否有指定的值
+				@ConditionalOnResource:类路径下是否存在指定资源文件
+				@ConditionalOnWebApplication:当前是web环境
+				@ConditionalOnNotWebApplication:当前不是web环境
+				WebApplicationJndi:JNDI存在指定项
+
+		如何知道 springboot 开启了 哪些自动装配、禁止了哪些自动装配：在配置文件application.properties中 加入 debug=true
+			Postive matches 列表 表示 spring boot 自动开启的装配
+			Negtive matches 列表 表示 spring boot 在此时没有开启的自动装配
+
+
+
+
+	6、配置文件及yml的使用
+		springboot 默认的配置文件application.properties，key=value，
+			或者行内写法（k，v，[set/list/array],{map,对象}），中括号[]可以省略，{}不可以省略
+				student:
+					  name: zs
+					  age: 23
+					  sex: true
+					  birthday: 2019/02/12
+					  location: {province: 陕西,city: 西安,zone: 莲湖区} #行内写法   "陕\n西"-会被转译，单引号不会
+					  hobbies: 足球,篮球 #[足球,篮球] #行内写法
+					      #- 足球
+					      #- 篮球
+					  skills: [编程,金融]
+					      #- 编程
+					      #- 金融
+					  pet: {nickName: wc,strain: hsq}
+					    #nickName: wc
+					    #strain: hsq
+
+		还有一个 application.yml:yaml ain't markup lanuage,不是一个标记文档，xml 是一个标记文档
+		xml：								yml:---注意：1、key:空格value  2、通过垂直对齐 指定层次关系
+			<server>							server:
+				<port>8090</port>						port: 8090
+			</server>									path: /a/b/c
+
+------通过yaml 给对象注入值
+
+------绑定---两种方式---@ConfigurationProperties/ @Value---二者可以互补
+	1、
+		@Component // 将次JavaBean 放入spring 容器
+		@ConfigurationProperties(prefix = "student")
+		@Validated //开启 JSR303数据校验得注解
+		public class Student {
+
+			@Value("ww")
+			private String name;
+			@Value("23")
+			private int age;
+			private boolean sex;// true 男 false 女
+			private Date birthday;
+			// {province:陕西，city:西安，zone：莲湖区}
+			private Map<String, Object> location;
+			private String[] hobbies;
+			private List<String> skills;
+			private Pet pet;
+
+			@Email //JSR303校验
+			private String email;
+
+	2、
+		@Component // 将次JavaBean 放入spring 容器
+		public class Student {
+			@Value("ww")
+			private String name;
+			@Value("24")
+			private int age;
+		}
+
+-----yml 文件
+		student:
+			  name: zs
+			  age: 23
+			  sex: true
+			  birthday: 2019/02/12
+			  location: {province: 陕西,city: 西安,zone: 莲湖区}
+			  hobbies:
+			      - 足球
+			      - 篮球
+			  skills:
+			      - 编程
+			      - 金融
+			  pet:
+			    nickName: wc #也可写成 nick-name: wc 松散写法
+			    strain: hsq
+
+----------------------------------------------------------------------------------------
+绑定值得两种方式
+	1、@ConfigurationProperties(yml/Properties)                 2、@Value("xx")
+注值：				批量注入												单个
+
+松散写法				yes													no
+
+springEL(spEL)  	no													yes
+
+JSR303数据校验			yes													no
+
+注入复杂类型			yes													no
+
+简单类型：(8个基本类型/String/Date)
+复杂类型：map、list、array、、、、
+
+--------------------------------------------------------------------------------------
+	7.@PropertySource：默认会加载application.properties/application.yml 文件----ctrl+n 新建文件
+		@Component // 将次JavaBean 放入spring 容器
+		@ConfigurationProperties(prefix = "student")
+		@Validated
+		@PropertySource(value= {"classpath:conf.properties"})//如果没有默认文件，则需要该注解来指定
+		public class Student {}
+
+		如果没有默认文件，则需要该注解@PropertySource来指定，但是，@PropertySource只能指定 properties文件，不能指定 yml 文件
+
+
+	8、@ImportResource、配置类、占位符表达式
+		a、@ImportResource
+			spring boot 自动装配/自动配置
+			spring等配置文件 默认会被spring boot 自动给配置好，如果配置了，spring boot是不能识别的
+				如果需要识别，则需要通过 @ImportResource 来指定配置文件的路径，不推荐手写spring 配置文件
+				springboot 推荐使用注解的方式进行配置：@configuration @Bean，配置xml文件，通过注解配置。
+
+				@ImportResource(locations = {"classpath:spring.xml"})
+				@SpringBootApplication
+				public class SpringBoot2020Application {
+
+					public static void main(String[] args) {
+						SpringApplication.run(SpringBoot2020Application.class, args);
+					}
+				}
+
+			springboot 推荐使用注解的方式进行配置：@configuration @Bean，配置xml文件，通过注解配置。示例如下
+
+			//配置类(等价于 spring.xml)
+			@Configuration
+			public class AppConfig {
+					@Bean
+					public StudentService stuService() {//<bean id="stuService">
+						StudentService stuService = new StudentService();
+			//			StudentDao stuDao = new StudentDao(); //注入dao
+			//			stuService.setStudentDao(stuDao);
+						return stuService;//返回值 <bean class="xxxx">
+					}
+
+			}
+
+
+		b、spring boot 全局配置文件中的占位符表达式    1、随机数   2、引用变量值
+			${random.uuid}:uuid
+			${random.value}:随机字符串
+			${random.int}:随机整型数
+			${random.long}:随机长整型数
+			${random.int(10)}:10以内的整型数
+			${random.int[1024,65536]}:指定随机数范围
+
+		---yml文件
+			student:
+				  name: ${random.value}
+				   age: ${student.user.age} //可以以这种方式获取application.properties的值，两个文件可以相护引用
+				   //age: ${student.user.age2:2} //如果找不到该值，则使用默认值 2
+
+
+		---application.properties
+			student.user.name=${random.value}
+			student.user.age=25
+
+
+		9、多环境切换 (profile)
+			a、properties:默认springboot 会读取 application.properties 环境
+
+				多个环境的命名方式： application-环境名 .properties
+					application-dev.properties -- 开发环境
+					application-test.properties --测试环境
+				注：springboot 默认加载 	 application.properties 如果要切换环境 则在默认配置文件里面加上 spring.profiles.active=环境名，
+					如果 把 主配置文件 application.properties 配置注释掉，spring boot 仍然会读取其他 application-环境名 .properties 中的配置，
+					而且会覆盖 yml 文件中的配置，properties 优先级 比 yml 要高
+
+			b、	通过yml 配置
+				第一个环境：主环境
+				server:
+				  port: 8091
+				spring:
+				  profiles:
+				    active: dev //指定本次使用的环境
+				---
+				第二个环境：测试环境
+				server:
+				  port: 8092
+				spring:
+				  profiles: test //环境名
+				---
+				第三个环境：开发环境
+				server:
+				  port: 8093
+				spring:
+				  profiles: dev
+				---
+
+			c、动态切换环境
+				1、命令行方式
+					(1)STS(eclipse):Run As -- Run Configuration -- Arguments -- Program Arguments --设置如下
+						" --spring.profiles.active=dev "
+
+					(2)
+						命令行方式： java -jar 项目名 .jar --spring.profiles.active= 环境名
+
+						通过vm参数指定环境：Run As -- Run Configuration -- Arguments -- vm arguments -- 设置如下
+							" -Dspring.profiles.active=dev "
+-----------------------------------------------------------------------------------------------------------------
+
+		10、配置文件的位置
+			a、项目内部的配置文件
+				properties和yml中的配置，相护补充，如果冲突，则properties 优先级高
+				springboot默认能够读取的 application.properties 和 application.yml，这两个文件可以存在 以下 4个地方
+					1、file: ./config  //点 表示 项目根目录
+					2、file: .
+					3、classpath: ./config
+					4、classpath: .
+				注意：
+					1、如果某项配置冲突，则优先级 1-2-3-4
+					2、如果不冲突，则互补结合使用
+					3、配置项目名：server.servlet.context-path=/boot 访问的时候要加上该名字
+
+			b、项目外部的配置文件	（补救）适合 大量配置需要修改
+				Run As -- Run Configuration -- Arguments -- Program arguments -- 设置如下
+					" --spring.config.location=配置文件路径   "
+				如果 同一个配置文件 同时存在 内部配置文件 和 外部配置文件 ，则 外部优先级高于内部
+				在命令行执行； java -jar 项目.jar --spring.config.location=配置文件路径
+
+			c、项目运行参数（适合该个别配置）
+				Run As -- Run Configuration -- Arguments -- Program Arguments --设置如下
+					--serve.port=8083 --serve.context-path=/abc
+
+			d、多个地方配置时，如果冲突，优先级：命令行参数 > 外部文件 > 内部文件   (properties > yaml)
+			具体的文件顺序参照官网：https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/html/spring-boot-features.html#boot-features-external-config
+
+
+		11、springboot 日志的处理
+			a、
+				日志框架：UCL JUL Jboss-logging logback log4j log4j2 slf4j ....
+				springboot 默认 使用  logback、slf4j ， 我们直接使用即可，不用配置
+
+				日志级别：TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+				springboot 默认 INFO, WARN, ERROR, FATAL, OFF 日志只打印 info 以及之后级别的信息
+				可以在配置文件里面配置
+					logging.level.com.gavin.springBoot2020=warn（自定义日志级别）
+					logging.level.主配置类文件所在包
+				可以通过配置 将日志信息存储到文件中
+					logging.file.name=springboot.log--相对路径-- 代表存储到项目的根目录springboot.log文件中
+					logging.file.name=D:/springboot.log-绝对路径--放在d盘springboot.log文件中
+					logging.file.path=d:/log/ ---存储到一个文件夹中，并且默认的文件名是 spring.log
+			b、
+				指定日志显示格式
+					1、日志显示在 console 中
+						logging.pattern.console = %d{yyyy-MM-dd} [%thread] %-5level %logger{50} - %msg%n
+						%d:日期时间
+						%thread:线程名
+						%-5level: 显示日志级别， -5 表示从左显示5个字符宽度
+						%logger{50}: 设置日志长度，如果超过50个，那么只显示首字母
+						%msg:日志消息
+						%n:回车
+
+					2、默认的日志格式，在 logback jar 包中相应包中的 xml 中 进行配置
+
+					3、日志的具体使用规范: 官方说明-- https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/html/spring-boot-features.html#boot-features-logging
+
+
+		12、springBoot --- 开发web 项目（静态资源  html css js ）
+			1、spring boot 是一个 jar，因此 静态资源就不是 在存放到 webapps 中， 存放在哪里？
+				静态资源的存放  通过 WebMvcAutoConfiguration 类 -- addResourceHandlers()方法指定   /webjars/
+				springboot 将静态资源存入到jar包中，访问时从 jar 的目录结构的 webjars/ 开始写。-- Http://localhost:8080/webjars/jquery/3.3.1-1/jquery.js
+
+			2、如何将自己写的静态资源，放到springboot 中？
+				a、将自己写的静态资源 变成 jar 引入 （dependency）同上，不推荐此方式
+				b、推荐：springboot 约定：springboot 将一些目录结构设置成静态资源存放目录，我们的静态资源直接放入这些目录即可（webapp）
+					目录在：ResourceProperties 类中的 CLASSPATH_RESOURCE_LOCATIONS 属性中设置：
+						{ "classpath:/META-INF/resources/","classpath:/resources/", "classpath:/static/", "classpath:/public/" }
+					在以上目录存放资源文件后，访问时，不需要加前缀，直接访问即可：http://localhost:8080/hello.html
+
+				c、设置欢迎页面：
+					WebMvcAutoConfiguration 类中得 welcomePageHandlerMapping() ---> getIndexHtml() ---> location + "index.html",
+					即 任意一个静态资源目录中得 index.html 就是欢迎页，直接访问 http://localhost:8080/
+
+				d、网站中 网页标签得 logo 是固定名字： favicon.ico
+					自定义 favicon.ico : 通过阅读源码得知，只需要将 favicon.ico文件放入任意静态资源目录中即可。
+
+				e、如何自定义静态资源得目录(在 主配置文件里面配置，并且默认得会失效)
+					spring.resources.static-locations=classpath:/res/,classpath:/img/
+
+				f、动态资源：JSP （springboot 默认不支持）--- 推荐 模板引擎 thymeleaf
+					模板引擎 thymeleaf: 网页 = 模板 + 数据
+					引入 thymeleaf：到官网查询 thymeleaf 得依赖（maven）
+
+				boot 通过 XxAutoConfiguration 实现自动装配，修改默认值 XxxProperties(prefix + 属性名)
+
+				使用thymeleaf: (代码在哪里写)
+					ThymeleafAutoConfiguration\ ThymeleafProperties
+
+				1、-----ThymeleafProperties.Java 源码
+
+					@ConfigurationProperties(prefix = "spring.thymeleaf")
+					public class ThymeleafProperties {
+						private static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;//默认得编码
+
+						public static final String DEFAULT_PREFIX = "classpath:/templates/";//默认得路径。前缀
+
+						public static final String DEFAULT_SUFFIX = ".html";//默认得后缀
+
+				2、<p th:text="${welcome}">Welcome to thyme!</p>以上，先从 ${welcome}取值，如果有则直接显示，如果没有，则显示 Welcome to thyme!
+					th: 就是替换原有得 html 得值
+
+				-----bootController.java
+
+					@RequestMapping("/welcome")
+					public String welcome(Map<String,Object> map) {
+						//给 thymeleaf 准备数据
+						map.put("welcome","welcomeThymeleaf");
+						return "result";
+					}
+
+				----result.html
+					<p id="pid" class="pclass" th:id="${welcome}" th:class="${welcome}"  th:text="${welcome}">Welcome to thyme!</p>
+
+				-----源码 ，网页上显示得
+					<p id="welcomeThymeleaf" class="welcomeThymeleaf">welcomeThymeleaf</p>
+
+					th:xx (参见第十章 Attribute Pre...)
+					th:text	   获取文本值（不转义）---<h1>hello</h1> ---就原样显示
+					th:utext 获取文本值（转义）  ---<h1>hello</h1> ---显示 将hello渲染为 h1 后得效果
+
+				符号问题：查看第四章 standard expression syntax
+
+
+		th:each 的使用
+		----bootController.java
+			@RequestMapping("/welcome")
+			public String welcome2(Map<String, Object> map) {
+
+				List<Product> prods = new ArrayList<>();
+				prods.add(new Product("a", 100, 10));
+				prods.add(new Product("b", 100, 10));
+				prods.add(new Product("c", 100, 10));
+
+				// 给 thymeleaf 准备数据
+				map.put("prods", prods);
+
+				return "result";
+
+			}
+
+		---result.html
+			<div th:each="prod : ${prods}">
+				<h4 th:text="${prod.name}">Onions</h4>
+				<h4 th:text="${prod.price}">2.41</h4>
+				<h4 th:text="${prod.inStock}? #{true} : #{false}">yes</h4>
+			</div>
+
+
+
+	13、springBoot 整合 JSP 开发
+		之前 springBoot 默认 自带一个 内置得 tomcat ，不需要打war 包，直接通过jar 即可运行。
+			springBoot 整合JSP 开发步骤：
+				1、新建springBoot项目，选择 war 包
+
+				2、注意：provided -- 意思是指，将项目打包时，不需要将内置得 tomcat 一起打包。
+					<dependency>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-tomcat</artifactId>
+						<scope>provided</scope>
+					</dependency>
+
+				3、建立基本的Web项目所需的目录结构
+					webapps/WEB_INF
+					webapps/WEB_INF/web.xml(不需要写，boot 会自动配置)
+					webapps/index.jsp
+
+				4、创建 tomcat 实例，部署项目
+					访问： http://localhost:8080/SBJsp/index.jsp
+					域名：端口/项目名/文件名
+
+		但是，如果要整合jsp 开发，就需要 单独配置一个 外置得tomcat，需要 打 war 包。
+
+		分析：springBoot 项目，在启动服务器tomcat时，会自动调用 ServletInitializer 类中的 configure() 方法，
+			 configure()方法会调用 springBoot 的只配置类，从而启动springboot。
+			 即，在启动tomcat的服务器时，1、启动tomcat 2、启动springBoot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

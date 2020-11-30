@@ -935,4 +935,17 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils{
         }
         return parseToDate(csrq, "yyyyMMdd");
     }
+
+	/**
+	 * 获取闰年、平年2月份的天数
+	 * @param year
+	 * @return
+	 */
+	public static int getMonthDays(String year) {
+		int year1 = Integer.parseInt(year);
+		Calendar c = Calendar.getInstance();
+		c.set(year1, 2, 1);// year年的3月1日
+		c.add(Calendar.DAY_OF_MONTH, -1);//将3月1日往左偏移一天结果是2月的天数
+		return c.get(Calendar.DAY_OF_MONTH);
+	}
 }

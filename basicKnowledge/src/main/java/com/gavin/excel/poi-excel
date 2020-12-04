@@ -1,0 +1,20 @@
+在用java 编写生成报表时发现了个问题，将行，列隐藏，将列隐藏很简单用
+
+this.sheet.setColumnHidden((short)12, true); // 将第13列隐藏      注意excel的第一列用0表示
+
+隐藏行：
+HSSFRow row     = sheet.getRow(8);
+row.setZeroHeight(true);
+将第8行隐藏就是将他的高度设为0也等同为隐藏
+
+
+<span style="font-size:14px;">FileInputStream inp = new FileInputStream("E:\\WEIAN.xls");
+HSSFWorkbook wb = new HSSFWorkbook(inp);
+HSSFSheet sheet = wb.getSheetAt(2); // 获得第三个工作薄(2008工作薄)
+// 填充上面的表格,数据需要从数据库查询
+HSSFRow row5 = sheet.getRow(4); // 获得工作薄的第五行
+HSSFCell cell54 = row5.getCell(3);// 获得第五行的第四个单元格
+cell54.setCellValue("测试纳税人名称");// 给单元格赋值
+//获得总列数
+int coloumNum=sheet.getRow(0).getPhysicalNumberOfCells();
+int rowNum=sheet.getLastRowNum();//获得总行数</span>

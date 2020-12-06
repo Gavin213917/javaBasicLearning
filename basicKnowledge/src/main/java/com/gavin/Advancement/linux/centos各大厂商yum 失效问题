@@ -1,0 +1,35 @@
+centos65 centos6 yum [Errno 14] PYCURL ERROR 22
+
+centos各大厂商yum 突然失效了
+阿里
+
+163
+
+清华
+
+------
+
+http://mirrors.aliyun.com/centos/6/os/x86_64/repodata/repomd.xml: [Errno 14] PYCURL ERROR 22 - "The requested URL returned error: 404 Not Found"
+Trying other mirror.
+
+
+
+处理方法：
+
+/etc/yum.repos.d/
+
+修改 yum内容
+
+[base]
+name=CentOS-$releasever - Base - mirrors.aliyun.com
+failovermethod=priority
+baseurl=https://vault.centos.org/6.5/os/x86_64/
+gpgcheck=0
+
+[base]
+name=CentOS-$releasever - Base - mirrors.aliyun.com
+failovermethod=priority
+baseurl=https://vault.centos.org/6.9/os/x86_64/
+gpgcheck=0
+
+把repo文件里的东西都删掉  换上这个就行

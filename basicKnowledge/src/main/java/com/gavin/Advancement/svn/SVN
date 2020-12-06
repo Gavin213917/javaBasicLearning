@@ -1,0 +1,122 @@
+SVN 常见操作：
+    1、发布项目（share project）：项目组长 将本机的项目 第一次发布到中央仓库
+    2、下载项目（检出项目、check out）：组员 将中央仓库的项目 第一次下载到本地
+    3、提交（commit）：将本地修改的内容，同步到服务器中（本地--->服务器）
+            --编写完某一个小功能、每天下班前 提交
+    4、更新（update）：将服务器中的最新代码 同步到本地，（服务器--->本地）
+            --编写功能之前，每天上班前更新
+    注意：提交、更新 要及时，编写之前先更新，写完之后马上提交
+
+
+    安装：http://subversion.apache.org/packages.html#windows，还需配置环境变量，安装时会默认配置好
+    验证svn 安装：svn--version
+
+    5、将本地目录设置为 中央仓库（保存 项目中 各个历史版本）--svnadmin create D:\\svn(中央仓库)
+
+    6、启动svn 服务
+        a、命令行方式：svnserve -d -r D:\\svn
+        b、注册系统的方式：sc create 服务名 binpath="C:\develop\TortoiseSVN\bin\svnserve.exe --service -r D:\\svn" start=auto depend=Tcpip
+            --要以管理员的方式运行cmd
+        启动：sc start 服务名
+        关闭：sc stop  服务名
+        删除：sc delete 服务名
+
+    7、访问项目
+        a、匿名访问
+                仓库\..\conf\svnserve.conf
+                开启匿名访问：19行附近
+                anon-access = read --表示匿名的人只能读，不能写（注意不要留空格）
+                anon-access = write--可读可写
+                anon-access = none--无权
+        b、授权访问
+                1、anon-access = write--可读可写（注释打开）
+
+                2、编写权限文件--文件在：仓库\..\conf\ 下
+                    password-db = password（27行注释打开）--表示 授权人的用户名密码 存放在 password 文件中
+                    authz-db = authz--表示权限文件authz-- (36行注释打开)
+                    文件在：仓库\..\conf\password
+                权限：
+                        分组    [groups]
+                                dev=zs,ls
+
+                    [/foo/bar]--下面例子表示，改组能访问根目录，并且可读可写，其他组什么都不能做
+                                [/]
+                                @dev=rw
+                                *=
+
+                    [repository:/baz/fuz]
+
+
+
+    8、在eclipse 中使用SVN---
+        a、离线方式：需要加插件---eclipse_svn_site-1.10.5--放到eclipse的安装目录-dropins里面
+        b、在线方式：help--->eclipse Marketplace 搜 subversion
+
+       使用：
+        1、项目组长：发布项目
+            右键要发布的项目--team--share project - svn--...输入发布的地址 svn:// ...后面按要求填写即可
+            真正发布（提交）---右键--提交
+
+            黄色圆柱：本地无未提交代码
+            */灰色箭头：本地有未提交的代码、先提交
+            蓝色箭头：服务端有最新代码，本地还没有更新，先更新
+
+            红色叹号：冲突----更新或者提交时 发现冲突 --> 右键编辑冲突 --> 更新提交
+
+                发生冲突后：右键待更新的文件/项目：team--与资源库同步
+                选中有红色箭头的文件，右键--->编辑冲突
+                修改好后---右键--team--标记为已解决
+
+
+        2、组员项目下载（检出项目）
+            file--import--搜SVN
+            更新：右键待更新的文件/项目：team--更新
+            提交：右键待更新的文件/项目：team--提交
+            批量：右键待更新的文件/项目：team--与资源库同步
+            修改用户密码：C:\Users\18158\AppData\Roaming\Subversion\auth，将该文件下的文件全部删除，
+
+
+    9、恢复和查看历史版本
+            右键--team--查看历史资源--选中需要恢复/查看的文件 --team--如果要恢复成历史版本（选择获取内容，然后覆盖）
+            如果此操作报错，则需要将 仓库\..\conf\svnserve.conf 文件中的 anon-access 的值设置成 none
+
+    10、将svn 发布到外网
+        a、 nat123 等软件 将内网映射成外网
+        b、 租一台互联网服务器（新网、万网、阿里云），将项目发布到服务器中
+        c、 svn托管网站 www.svnchina.com
+        d、如果发布到内网，则需要关闭防火墙
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

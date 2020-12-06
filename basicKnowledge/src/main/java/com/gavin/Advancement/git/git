@@ -1,0 +1,380 @@
+git: 版本控制软件（分布式版本控制软件）
+    每个人都有版本库，把中央仓库放在了本地
+    本地（自己的计算机）：本地工作目录--add--->暂存区---commit--->版本库（减少不必要的版本）
+    本地版本库--push-->远程版本库---pull--->本地版本库（本地有很多版本库，也可以说是有很多分支）
+        默认的分支（主分支 master）
+
+命令：
+    git add:将本地文件 增加到暂存区
+    git commit:将 暂存区的内容 提交到本地仓库（本地分支）
+    git push:将本地仓库的内容推送到 远程仓库
+    git pull:将远程仓库的内容 拉取到 本地仓库
+
+安装Git
+    网址：https://gitforwindows.org/
+    安装时: Use git from git bash only...,其他默认下一步
+    配置path：C:\develop\Git\bin
+
+    配置git--右键 git bash（用户名和邮箱），可以在 C:\Users\18158\.gitconfig 文件中查看
+    git config --global user.name "gavin"
+    git config --global user.email "1462705240@qq.com"
+
+搭建git 服务器（远程仓库）；统一的托管网站--https://github.com/
+    为了在本地 和远程仓库之间进行 免密钥登陆，可以配置 ssh
+
+配置ssh：先在本地配置，发送给远程，本地和远程关联，两台计算机关联
+本地生成：命令： ssh-keygen -t rsa -C 1462705240@qq.com，一直回车，C:\Users\18158\.ssh 生成 id_rsa \ id_rsa.pub 文件
+发送给远程：gitHub网页---> setting--->SSH and GPG keys---> new SSH key ---> title 任意、key 中输入 刚才在本地生成的ssh
+    将本地刚才生成的 id_rsa.pub 内容复制到远程的key中
+
+测试连通性：
+    命令：ssh -T git@github.com  -- yes ，如果本地和远程成功通信，则可以在 C:\Users\18158\.ssh 目录中生成 known_hosts 文件
+    如果失败，多尝试几次、检查回车符
+
+
+在本地新建git项目
+    在项目根目录  右键 -- git bash -- git init
+
+在远程建立一个git项目
+    new-建立项目-生成  https://github.com/Gavin213917/myGitRemote.git
+
+本地项目和远程项目关联
+    命令：git remote add origin git@github.com:Gavin213917/myGitRemote.git
+
+
+第一次发布项目（本地--远程）---在要上传的项目中---右键 -- git bash
+    1、git add .     //文件---暂存区  点 指的是当前所有文件
+    2、git commit -m "注释内容"  //暂存区--本地分支（默认master）
+    3、git push -u origin master
+
+第一次下载项目
+    git clone git@github.com:Gavin213917/myGitRemote.git 或者  https://github.com/Gavin213917/myGitRemote.git
+
+提交（本地--远程）---在当前工作目录，右键 -- git bash
+    1、git add .
+    2、git commit -m "提交到分支"
+    3、git push origin master
+
+更新（远程--本地）
+    git pull
+
+Egit:在eclipse中操作git
+    目前的eclipse基本都支持git，如果不支持，则到eclipse marketplace 搜索在线安装
+    a、preference--team--git--configuration--配置邮箱 用户名
+    b、general--network --ssh2 --匹配下目录
+
+
+第一次发布项目（本地--远程）
+    1、右键选中项目--share project
+    2、右键选中项目--team--add to index---放到暂存区
+    3、commit ---提交到本地分支
+    4、将项目推送到远程：右键--team--remote--push--
+
+
+第一次下载项目
+    import -git项目- clone--输入 https/ssh 唯一标识符
+
+提交（本地--远程）---在当前工作目录，右键 -- git bash
+    1、team--add to index
+    2、team - commit
+    3、team - push
+
+    commit时：commit 和 commit and push 的区别
+            commit：不能单独的push 一个文件，只能push 整个项目
+            commit and push：可以单独push 某一个文件
+
+更新（远程--本地）
+    team--remote--pull
+
+
+git---冲突解决
+
+    发现冲突：1、进入同步视图---右键--team--synchronized...
+    解决：
+       add to index---添加到暂存区
+       commit--提交到本地分支
+       pull--更新服务端分支的内容到本地分支--merge（合并）
+       修改冲突：直接修改 或者 merge tool
+       此时，文件已经变成了本地的普通文件
+       add to index ---加到暂存区
+       commit and push --提交到服务端
+
+git--多个人，团队协作开发
+    github 中该项目-settings，添加合作者：Collaborators 加入合作者：全名或者邮箱
+
+----------------------------------------------------------------------------------------------------------
+
+Linux--->BitKeeper（2005年收费）
+
+Linux--->Git
+
+版本控制系统：集群式版本控制（cvs，svn） 分布式版本控制（git）
+
+git优势：
+    1、本地版本控制
+    2、重写提交说明
+    3、可以"后悔"
+    4、存在分支系统（branch）
+
+git：全量（每一个版本都包含全部的文件，时刻保持数据的完整性）
+svn：增量（只能看到修改过的）
+
+
+git的三种状态---- 工作区--add-->暂存区--commit-->对象区--push-->服务器
+    （已管理）
+    1、已修改（modified）
+    2、已暂存（staged）
+    3、已提交（committed）
+
+将某个目录纳入git管理；执行命令 git init （默认master分支）
+生成 .git 隐藏目录，git的版本控制目录
+
+命令：
+    删除目录并删除目录里面的子目录：rm -rf .git
+    新建文件：touch hello.txt
+    查看git 的状态：git status
+    从暂存区回退到工作区：git rm --cached hello.txt / git reset head hello.txt
+    修改命令：vi hello.txt
+    提交并加说明： git commit -m "xxxx"
+    查看提交日志：git log
+    查看最近几次的提交  git log -2
+    只看核心一行信息：git log --pretty=oneline
+    格式：git log --pretty=format:"%h - %an , %ar : %s" ---sha1部分 - 作者 - 什么时候提交的 ：注释内容
+
+commit duhauwe13r4asif478493bisbfdf----sha1计算的结果（sha1、md5 加密算法 、随机数），用于区分是哪一次的提交，并且不重复
+分布式id生成器
+
+
+git bash ---里面的Linux命令
+    ctrl+a ---定位到首位
+    ctrl+e ---定位到末尾
+    ctrl+c ---下一行
+    echo 'world' > hello.txt ---以world 覆盖 hello.txt 里面的内容
+    pwd ---查看当前的位置
+    cd ---进入文件夹（cd ~ = /c/user/1815 当前计算机的用户目录）
+    ls/ll ---查看目录结构
+    cat xxx ---查看xxx文件
+    git checkout -- hello.txt ---撤销修改（如果某个文件已提交，并且对其进行了修改，可以放弃修改，还原到已提交状态）
+
+设置邮箱、用户名---优先级 3>2>1
+    1、git config --global （基本不用，给整个计算机一次性设置）
+
+    2、git config --system （推荐使用：给当前用户一次性设置） 在文件 .gitconfig 里面查看
+
+    3、git config --local  （给当前项目一次性设置）
+
+    删除用户名和邮箱
+    git config --local --unset user.name
+    git config --local --unset user.email
+
+提交问题：只对修改之后的提交有效。修改之前的提交仍然使用的是之前的配置（用户名。邮箱）
+-----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

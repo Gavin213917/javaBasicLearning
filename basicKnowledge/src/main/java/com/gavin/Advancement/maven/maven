@@ -1,0 +1,7 @@
+1、maven 打jar包
+stax-api-1.0.1.jar
+ojdbc6-11.2.0.4.0.jar
+
+mvn install:install-file -DgroupId=javax.xml -DartifactId=stax-api  -Dversion=1.0.1 -Dpackaging=jar -Dfile=D:\mvn\javax\xml\stax-api\stax-api-1.0.1.jar
+
+mvn install:install-file -DgroupId=com.oracle.ojdbc6_g -DartifactId=ojdbc6_g -Dversion=11.2.0.4.0 -Dpackaging=jar -Dfile=D:\mvn\com\oracle\ojdbc6_g\11.2.0.4.0\ojdbc6_g.jar

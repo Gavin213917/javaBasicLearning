@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>潭州学院-keke老师QQ:792185203</title>
+  <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+  <style>
+	*{padding:0;margin:0}
+	a{text-decoration:none;color:#fff}
+	ul,li{list-style:none}
+	body{background:#fff;font-size:12px;font-family:"微软雅黑"}
+  </style>
+ </head>
+ <body>
+	
+	<div id="box"></div><div id="box"></div>
+	<input type="text"/>
+	<textarea id="message" cols="100" rows="10"></textarea>
+
+	<script type="text/javascript">
+		function log(message){
+			if(message){
+				console.log("【打印的结果如下】====>"+message);
+			}else{
+				alert(message);
+			}
+		}
+
+
+		/*
+			布尔类型:
+			number是完成小数里面人类小学四则运算的话。
+			那么字符串就是写一个文章。、
+			而boolean就是：判断题,所有的数据类型就相当我们在完成一个考卷
+			考卷就是作用域。判官就是js引擎，如果正确的就进入作用域中。如果不正确发脾气语法错误error
+
+			boolean判断题：true /false 
+		*/
+
+		var mark = true;
+		var f = false;
+		/*
+		1:今天是星期天吗：如果是我就逛街。如果不是在家里睡觉
+		2:我有一个女朋友。那么我一定很爱她，如果没有我爱自己.
+		3:如果当前时间是22:00那么我就要div背景切换成一个美女。否则切换成另外一张跑车的图片.
+		关系运算符： 
+			大于 >，
+			大于等于>=   
+			小于<，
+			小于等于<=，
+			等于==，
+			不等于!= 
+			全等于=== 
+		返回值都是boolean
+		
+		*/
+		
+		//条件表达式: 如果(if) /否则(else)
+		//格式:
+		/*
+		if(boolean){
+			//if体(程序代码)
+		}else{
+			//else体(程序代码)
+		}*/
+		//今天是星期天吗：如果是我就逛街。如果不是在家里睡觉
+		/*var str = "星期一";
+
+		if(str == "星期天"){
+			alert("逛街");
+		}else{
+			alert("在家里睡觉");
+		}*/
+
+		/*==和===的区别*/
+
+		/*var str = "0";//string
+		var num = 0;//number
+		log("str=="+typeof str);
+		log("num=="+typeof num);
+		console.log(str==num);//true
+		console.log(str===num);//false 比较字面值 有比较数据类型*/
+
+		/*
+			逻辑运算符: 如果你是男人并且今年30岁并且要房子并且脸蛋我就让你做我的男朋友，否则滚开
+			&& :与(并且) 
+				true && true === true
+				true && false ===false
+				false && true == false
+				false && false === false;
+				总结：只要条件中有一个为false那么就是false,只有全部为true才是true
+			||: 或(或者)
+				true || true === true
+				true || false ===true
+				false || true == true
+				false || false === false;
+				总结：只要条件中有一个为true那么就是true,只有全部为false才是false
+
+			! :非 (真亦假，假亦真)(取反)
+			
+
+			如果是括号的优先级是最高。先执行括号的然后在执行外面：
+			比如: true && (true && false) || false === true && false ||false == false
+
+		
+		*/
+		
+		//惰性求值		
+		var str = "xiaoyangj";//"",0,false,null,undefined ,NaN===返回都是false所以falsy
+		var str2 = str || "keke";
+
+		var str = "我爱你";
+		if(str){
+			alert(1);
+		}else{
+			alert(2);
+		}
+		//falsy和truely
+	</script>
+ </body>
+</html>

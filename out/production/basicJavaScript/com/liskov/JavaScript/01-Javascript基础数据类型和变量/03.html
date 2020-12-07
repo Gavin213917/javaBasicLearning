@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>潭州学院-keke老师QQ:792185203</title>
+  <style>
+	*{padding:0;margin:0}
+	a{text-decoration:none;color:#fff}
+	ul,li{list-style:none}
+	body{font-size:12px;font-family:"微软雅黑"}
+	.box{width:200px;height:100px;background:red;}
+  </style>
+ </head>
+ <body>
+
+	<script type="text/javascript">
+
+		//日记打印
+		function log(content){
+			if(console){
+				console.log("【你运行的结果是：】"+content)
+			}else{
+				alert("【你运行的结果是：】"+content);
+			}
+		};
+
+		//操作符：
+			//算术运算符：+(加号) -(减) *(乘) /(除) %(取余数/取摸)
+			//赋值运算符: =(赋值)
+			//递增递减运算符: ++(递增) / --（递减）
+			
+			//逻辑运算符：&&(且) ,  ||（或） ,!（非）
+			//比较运算符：> ,< ,= ,<=,<=,!=,==(相等),===(值内存相等)
+			
+			//boolean if for
+
+			//三元运算符: ? :
+			//位运算符：
+
+			//+号是一个加法运算，通过连接符
+			var a = 1;
+			var b = 2;
+			var c = a;
+			c = 6;
+			log("1+2="+(a+b));
+
+			var str = "我";
+			var str2 = "爱你";
+			//1：数字放前面运算，先计算在拼接,如果后面就是当做字符串拼接了
+			//
+			log(str+str2);
+			var c = a+b;
+			log(str+(a+b));//我1-2，如果一个运算无法计算就会返回NaN ----not a number
+			log(str+c);
+			log(a+b+str);//3我
+
+			var str = "6";
+			var str2= "2";
+			log(str+str2);
+
+			//但是在乘法，减法，除法(返回浮点数(小数),除的尽就是整数)，取余数就运算符
+			//整数:正整数(123456789)和负整数(-1 -100 -14575)和0
+			//浮点数: 整数(正整数和负整数和0)和小数(1.1645,1.89,-1.82)
+
+			log(str-str2);
+			log(str * str2);
+			log(str / str2);
+			log(str % str2);
+			log(3/4);
+			log(1/9);
+
+			log(9 % 9);//1如果  被除数 % 除数 =余数 除不尽的就直接返回被除数
+			log(10 % 9);
+			log(6 % 2);
+			log(6 / 2);
+		
+
+			log(1%2);//1
+			log(99%100);//99
+			log(201%988);//201
+			log(111%222);//111
+	</script>
+ </body>
+</html>

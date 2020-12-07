@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>潭州学院-keke老师QQ:792185203</title>
+  <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+  <style>
+	*{padding:0;margin:0}
+	a{text-decoration:none;color:#fff}
+	ul,li{list-style:none}
+	body{background:#333;font-size:12px;font-family:"微软雅黑"}
+  </style>
+ </head>
+ <body>
+	
+
+	<script type="text/javascript">
+		//es5数组：i9+ sort(),reverse(),filter(),map(),some(),every() forEach ,
+		//indexOf lastIndexOf  查询元素所在的位置
+
+		//every:如果你的元素的每一个都符合条件就返回true.否则返回false
+		//some：如果遇到第一个不满足条件的true
+		//map:检查所有的元素是否符合条件，符合就是true不符合就false
+		//用来检测数组中的类型是否是一致.
+
+		var obj = {"keke":"keke"};
+		function test(){}
+		var arr = [1,2,3,"keke",4,5,6,'keke',8,9,obj,test];
+		var index = arr.lastIndexOf('keke');//房间号码==数组索引
+		arr[index] = "小阳";
+		alert(arr)
+		//return;
+
+		var newArr = [];
+		for(var i=0;i<arr.length;i++){
+			if(arr[i]!="keke"){
+				newArr.push(arr[i]);
+			}
+		}
+		//alert(newArr);
+	
+		var newArr2 =  arr.filter(function(value){
+			return value !="keke";
+		});
+
+		//alert(newArr2);
+
+		//forEach 循环
+		for(var i=0;i<arr.length;i++){
+			//alert(arr[i]);
+		}
+
+		//等价于:
+		arr.forEach(function(value){
+			//alert("====="+value);
+		});
+
+		//源代码
+		//Array.prototype.each = function(callback){
+		//	for(var i=0;i<this.length;i++){
+		//		callback(this[i]);
+		//	}
+		//};
+
+		//arr.each(function(value){
+			//alert("7777777777====="+value);
+		//});
+	
+
+
+		Array.prototype.indexOf = function(value){
+			for(var i=0;i<this.length;i++){
+				if(this[i]===value){
+					return i;
+					break;
+				}
+			}
+
+			return -1;
+		};
+
+
+
+		//arr.reverse(); //反转
+	
+		/*
+		Array.prototype.map2 = function(fun){
+			var len = this.length;
+			var res = new Array(len);
+			var thisp = arguments[1];
+			for(var i=0;i<len;i++){
+				if(i in this){
+					res[i] = fun.call(thisp,this[i],i,this);
+				}
+			}
+			return res;
+			
+		};
+
+		Array.prototype.filter2 = function(fun){
+			var len = this.length;
+			var res = new Array(len);
+			var thisp = arguments[1];
+			for(var i=0;i<len;i++){
+				if(i in this){
+					var val = this[i];
+					if(fun.call(thisp,this[i],i,this)){
+						res.push(this[i]);
+					}
+				}
+			}
+			return res;
+		};*/
+
+		
+	
+
+
+	
+	</script>
+ </body>
+</html>

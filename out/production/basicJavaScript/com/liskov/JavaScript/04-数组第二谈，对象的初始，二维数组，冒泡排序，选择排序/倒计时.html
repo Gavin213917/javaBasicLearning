@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>潭州学院-keke老师QQ:792185203</title>
+  <style>
+	*{padding:0;margin:0}
+	a{text-decoration:none;color:#fff}
+	ul,li{list-style:none}
+	body{font-size:12px;font-family:"微软雅黑"}
+  </style>
+ </head>
+ <body>
+
+	<h1 id="content"></h1>
+	<script type="text/javascript">
+		function start(){
+			var now = new Date();
+			var end = new Date(2016,0,1);
+			var time = end.getTime() - now.getTime() ;
+			var stime = time / 1000;
+		    var dd = checkTime(parseInt(stime/ 60 / 60 / 24));//计算剩余的天数  
+			var hh = checkTime(parseInt(stime / 60 / 60 % 24));//计算剩余的小时数
+			var mm = checkTime(parseInt(stime / 60 % 60));//计算剩余的分钟数  
+			var ss = checkTime(parseInt(stime% 60));//计算剩余的秒数  
+			document.getElementById("content").innerHTML = dd+"==="+hh+"==="+mm+"==="+ss;
+		}
+
+		function checkTime(i)    
+            {    
+               if (i < 10) {    
+                   i = "0" + i;    
+                }    
+               return i;    
+            }    
+		
+		setInterval(start,1000);
+	</script>
+ </body>
+</html>

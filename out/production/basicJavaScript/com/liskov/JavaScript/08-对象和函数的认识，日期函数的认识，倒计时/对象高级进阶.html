@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+ </head>
+ <body>
+	
+	<h1 id="title"></h1>
+	<h3 id="subtitle"></h3>
+	<h3 id="time"></h3>
+	<h3 id="author"></h3>
+	<h3 id="hits"></h3>
+	<h3 id="price"></h3>
+	<div id="content"></div>
+	<div id="attchments"></div>
+	<div id="comments"></div>
+	<div id="editor"></div>
+
+
+	<script>
+
+		//要么排序，反转，统一循环放入到目标元素中
+		var content = {
+			title:"习近平访美查看IT行情",
+			content:"2014年习近平访美查看IT行情，做飞机前面.....",
+			subtitle:"坐飞机",
+			time:"2015-11-1 12:15:22",
+			author:"keke",
+			hits:10,
+			isDelete:0,
+			img:"http://images.huxiu.com/article/cover/201512/11/173106241500.png",
+			mark:true,
+			price:121.5,
+			
+			attchments:["aaa.txt","bbb.gif","ccc.jpg"],
+			comments:[
+				{title:"太刁了",username:"keke",img:"1aaa.gif",content:"1士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"1太刁了",username:"keke1",img:"2aaa.gif",content:"2士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"2太刁了",username:"keke2",img:"3aaa.gif",content:"3士大夫士23423大夫是的",time:"2015-12-12 12:12"},
+				{title:"3太刁了",username:"keke3",img:"4aaa.gif",content:"4士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"4太刁了",username:"keke4",img:"5aaa.gif",content:"5士大夫4234士大夫是的",time:"2015-12-12 12:12"},
+				{title:"5太刁了",username:"keke5",img:"6aaa.gif",content:"6士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"6太刁了",username:"keke6",img:"7aaa.gif",content:"7士大夫士大夫是的",time:"2015-12-12 12:12"},
+				{title:"7太刁了",username:"keke7",img:"8aaa.gif",content:"8士大夫士大夫是的",time:"2015-12-12 12:12"}
+			],
+			editor:{username:"稀烂",age:16,address:"上海"}
+		};
+
+		for(var key in content){
+			var data =  content[key];
+			if(typeof data!="object"){
+				if($(key))$(key).innerHTML = data;
+			}else{
+				if(Array.isArray(data)){
+					var len = data.length;
+					var chtml = "";
+					for(var i=0;i<len;i++){
+						var params = data[i];
+						if(typeof params=="object"){
+							chtml +=getCommentTemplate(params);
+						}else{
+							chtml+=params+"=====";
+						}
+					}
+					$(key).innerHTML = chtml;
+				}else{
+					var html = "";
+					for(var k in data){
+						html+=data[k]+"==";
+					}
+					$(key).innerHTML=html;
+				}
+			}
+		};
+
+	
+		function getCommentTemplate(json){
+			//var html = "<h1>"+json.title+"</h1><div>"+json.content+"</div>";
+			var html = "<h3>"+json.title+"</h3><span>"+json.content+"</span>";
+			return html;
+		}
+
+		
+		function $(id){
+			return document.getElementById(id);
+		};
+	</script>
+ </body>
+</html>

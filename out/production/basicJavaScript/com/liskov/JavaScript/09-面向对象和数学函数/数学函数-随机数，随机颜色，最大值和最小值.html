@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <style>
+	*{padding:0;margin:0}
+	body{font-size:14px;font-family:"微软雅黑";}
+	a{text-decoration:none;color:#3333}
+	div{width:80px;height:50px;float:left;text-align:center;color:#fff;line-height:50px;font-weight:700}
+  </style>
+ </head>
+ <body>
+
+	<script type="text/javascript">
+		/*
+			Math.abs(x)===绝对值
+			Math.max(n,n1,n2.....)====最大值
+			Math.min(n,n1,n2.....)====最小值
+			Math.pow()===几次方
+			Math.sqrt()===开平方根
+			
+			Math.floor(x)===向下取证,只保留小数点前的数字，后面都舍去
+			Math.ceil(x)====向上取整 向只保留小数点前的数字+1，后面都舍去 除非是整数，就直接返回
+			Math.round(x)===四舍五入
+			Math.random(x)===随机数
+		*/
+		//var a = -100;
+		//var b = Math.abs(a);
+		var maxValue = Math.max(1,56,7,8,9,2,4,5,6,78,9);
+		var minValue = Math.min(1,56,7,8,9,2,4,5,6,78,9);
+		//alert(maxValue+"==="+minValue);
+
+		//var a = 2;
+		//var c = Math.pow(5,3);//5*5*5
+		//alert(c);Math.pow()
+
+		/*var a = 2;
+		var cc = Math.sqrt(a);
+		alert(cc);*/
+		
+		//toFixed(保留小数点的位数)，同时会四舍五入
+		//var cc =3.4968;
+		//var c = Math.floor(cc);
+		//var k = Math.ceil(cc);
+		//var r = Math.round(cc);
+		//alert(c+"==="+k+"==="+r+"==="+cc.toFixed());
+
+
+		//随机数 Math.random(x)===随机数的范围：0<num(0.5)<1的一个数字一个小数
+		//5 - 10
+		setInterval(function(){
+			var divDom = document.createElement("div");
+			var color = getRgb16();
+			divDom.style.background = color;
+			divDom.innerHTML = color;
+			document.body.appendChild(divDom);
+		},1000/30);
+
+		//范围随机
+		function rangeRandom(start,end){
+			return Math.floor(Math.random()*(end-start+1)+start);
+		}
+        //0-start
+		function tRandom(start){
+			return Math.floor(Math.random()*start);
+		}
+
+
+		function getRgb(){
+			//0-255
+			var r = tRandom(256);
+			var g = tRandom(256);
+			var b = tRandom(256);
+			return "rgb("+r+","+g+","+b+")";
+		}
+
+		
+		function getRgb16(){
+			//0-255
+			var r = tRandom(256).toString(16);
+			var g = tRandom(256).toString(16);
+			var b = tRandom(256).toString(16);
+			if(r.length<2)r=r+""+r;
+			if(g.length<2)g=g+""+g;
+			if(b.length<2)b=b+""+b;
+			return "#"+r+""+g+""+b;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+		/*
+		var arr = [1,56,7,8,9,2,4,5,6,78,9];
+		Array.prototype.max = function(){
+			 return Math.max.apply({}, this);
+		};
+
+		Array.prototype.min = function(){
+			 return Math.min.apply({}, this);
+		};
+
+		var ma = arr.max();
+		alert(ma);*/
+
+	</script>
+
+ </body>
+</html>

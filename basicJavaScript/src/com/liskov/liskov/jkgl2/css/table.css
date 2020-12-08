@@ -1,0 +1,51 @@
+.wd-table{
+    width: 100%;
+}
+.wd-table caption{
+    padding: 8px;
+    font-size: 14px;
+    line-height: 14pt;
+}
+.wd-table th, .wd-table td {
+    padding: 8px;
+    font-size: 14px;
+    line-height: 14pt;
+    vertical-align: top;
+    border-bottom: 1px #eaeaea solid;
+}
+.wd-table th{
+    background: #f7f7f7;
+}
+.wd-table.bordered {
+    border: 1px #eaeaea solid;
+    border-left: 0;
+    background:transparent;
+}
+.wd-table.bordered td,.wd-table.bordered th {
+    border-left: 1px #eaeaea solid;
+    border-bottom: 1px #eaeaea solid;
+}
+
+.wd-table tr.odd td{
+    background-color: #f9f9f9;
+}
+
+.wd-table.hover tr:hover td,.wd-table.hover tr.hover td{
+    background-color: #f9f9f9
+}
+.wd-table tr.active td{
+    background: #f7f7f7;
+}
+.wd-table tr.info td{
+    background-color: #d9edf7;
+}
+.wd-table tr.success td{
+    background-color: #dff0d8;
+}
+.wd-table tr.warning td{
+    background-color: #fcf8e3;
+}
+.wd-table tr.danger td{
+    background-color: #f2dede;
+}
+

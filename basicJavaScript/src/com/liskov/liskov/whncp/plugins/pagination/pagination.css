@@ -1,0 +1,95 @@
+@charset "UTF-8";
+.M-box {
+    position: relative;
+    text-align: center;
+    zoom: 1;
+}
+
+.M-box:before,
+.M-box:after {
+    content: "";
+    display: table;
+}
+
+.M-box:after {
+    clear: both;
+    overflow: hidden;
+}
+
+.M-box span {
+    float: left;
+    margin: 0 5px;
+    /*width: 38px;*/
+    /*height: 20px;*/
+    line-height: 20px;
+    color: #010204;
+    font-size: 10px;
+    padding: 4px 4px;
+}
+
+.M-box .active {
+    float: left;
+    margin: 0 5px;
+    /*width: 38px;*/
+    /*height: 20px;*/
+    line-height: 20px;
+    background-color: #1B56Bc;
+    color: #fff;
+    font-size: 10px;
+    border: 1px solid #1B56Bc;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.M-box a {
+    float: left;
+    margin: 0 5px;
+    line-height: 20px;
+    border: 1px solid #1B56Bc;
+    font-size: 10px;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.M-box a:hover {
+    color: #fff;
+    background: #1a54bb;
+}
+
+.M-box .next,
+.M-box .prev {
+    font-family: "Simsun";
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.now,
+.count {
+    padding: 0 5px;
+    /*color: #fff;*/
+    font-size: 12px;
+}
+
+.eg img {
+    max-width: 800px;
+    min-height: 500px;
+}
+
+.M-box >input {
+    float: left;
+    margin: 0 5px;
+    text-align: center;
+    background: #fff;
+    width: 32px;
+    color: #1a54bb;
+    line-height: 20px;
+    border: 1px solid #1B56Bc;
+    font-size: 10px;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.pagination {
+    float: right;
+    margin: 10px 0;
+}

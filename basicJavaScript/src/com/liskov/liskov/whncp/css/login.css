@@ -1,0 +1,174 @@
+html,body{
+    height: 100%;
+}
+.page-login{
+  position: relative;
+    height: 100%;
+}
+
+.page-login .footer-bg{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    height: 92px;
+    background: url("../images/login-footer-bg.png") no-repeat center bottom;
+}
+
+.page-login .header-box{
+    text-align: center;
+    padding-top: 58px;
+}
+
+.page-login .header-box .line{
+    display: inline-block;
+    vertical-align: middle;
+    background: #67a6db;
+    height: 2px;
+    width: 282px;
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+.page-login .header-box .logo{
+    display: inline-block;
+    vertical-align: middle;
+    width: 46px;
+    height: 65px;
+    margin-right: 15px;
+    background: url("../images/logo.png") no-repeat;
+}
+
+.page-login .header-box .name{
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 30px;
+    color: #333333;
+}
+
+.page-login .content-box{
+    position: relative;
+    height: 512px;
+    background: url("../images/login-body-bg.png") no-repeat center;
+}
+
+.page-login .content-box .left-bg{
+    position: absolute;
+    left: 0;
+    top:0;
+    width: 50%;
+    height: 100%;
+    background: #1c25c9;
+    z-index: 1;
+}
+
+.page-login .content-box .right-bg{
+    position: absolute;
+    right: 0;
+    top:0;
+    width: 50%;
+    height: 100%;
+    background: #01abfb;
+    z-index: 1;
+}
+.page-login .content-box .content-bg{
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top:0;
+    width: 100%;
+    height: 512px;
+    background: url("../images/login-body-bg.png") no-repeat center;
+}
+
+.page-login .content-box .login-box{
+    position: absolute;
+    top:100px;
+    width: 328px;
+    height: 308px;
+    background: #fff;
+    border-radius: 10px;
+    left: 50%;
+    margin-left: 100px;
+    z-index: 3;
+}
+.page-login .content-box .login-box .login-content{
+    padding: 0 24px;
+}
+
+.page-login .content-box .login-box .login-title{
+    font-size: 20px;
+    color: #333333;
+    padding-left: 15px;
+    height: 50px;
+    line-height: 50px;
+    padding-top: 15px;
+}
+
+.page-login .content-box .login-box .form-list{
+    padding-bottom: 0px;
+}
+
+.page-login .content-box .login-box .form-list>li{
+    position: relative;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    background: #e6ecf2;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.page-login .content-box .login-box .form-list>li .icon{
+    position: absolute;
+    left: 15px;
+    top:50%;
+    margin-top: -12px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+}
+.page-login .content-box .login-box .form-list>li .icon.icon-user{
+    background: url("../images/icon-login-user.png") no-repeat;
+}
+.page-login .content-box .login-box .form-list>li .icon.icon-password{
+    background: url("../images/icon-login-password.png") no-repeat;
+}
+.page-login .content-box .login-box .form-list>li .input-text{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border: 0;
+    background: none;
+    padding-left: 50px;
+}
+.page-login .content-box .login-box .form-list>li .input-text:focus{
+    outline: none;
+}
+
+.page-login .content-box .login-box .login-btn{
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    background: #0046d4;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+}
+
+.page-login .content-box .login-box .login-btn:hover{
+    text-decoration: none;
+    background: #0f54df;
+}
+
+.imageMask {
+    padding-left: 25px;
+    height: 30px;
+    width: 120px;
+}
+
+img {
+    vertical-align: middle;
+}

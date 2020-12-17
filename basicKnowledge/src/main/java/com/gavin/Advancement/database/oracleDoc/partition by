@@ -1,0 +1,52 @@
+group by是分组函数，partition by是分区函数（像sum()等是聚合函数），注意区分。
+
+  1、over函数的写法：
+  over（partition by cno order by degree ）
+  1
+  先对cno 中相同的进行分区，在cno 中相同的情况下对degree 进行排序
+
+  2、分区函数Partition By与rank()的用法“对比”分区函数Partition By与row_number()的用法
+  例：查询每名课程的第一名的成绩
+
+  （1）使用rank()
+  SELECT	*
+  FROM	(select sno,cno,degree,
+        	rank()over(partition by cno order by degree desc) mm
+        	from score)
+  where mm = 1;
+
+
+
+  （2）使用row_number()
+  SELECT *
+  FROM   (select sno,cno,degree,
+         row_number()over(partition by cno order by degree desc) mm
+         from score)
+  where mm = 1;
+
+
+  （3）rank()与row_number()的区别
+  由以上的例子得出，在求第一名成绩的时候，不能用row_number()，因为如果同班有两个并列第一，row_number()只返回一个结果。
+
+  2、分区函数Partition By与rank()的用法“对比”分区函数Partition By与dense_rank()的用法
+  例：查询课程号为‘3-245’的成绩与排名
+
+  （1） 使用rank()
+  SELECT *
+  FROM   (select sno,cno,degree,
+         rank()over(partition by cno order by degree desc) mm
+         from score)
+  where cno = '3-245'
+
+
+  （2） 使用dense_rank()
+  SELECT *
+  FROM   (select sno,cno,degree,
+         dense_rank()over(partition by cno order by degree desc) mm
+         from score)
+  where cno = '3-245'
+
+  （3）rank()与dense_rank()的区别
+  由以上的例子得出，rank()和dense_rank()都可以将并列第一名的都查找出来；
+  但rank()是跳跃排序，有两个第一名时接下来是第三名；
+  而dense_rank()是非跳跃排序，有两个第一名时接下来是第二名。

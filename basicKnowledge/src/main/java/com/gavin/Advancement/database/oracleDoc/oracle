@@ -10,3 +10,22 @@ union和union all的区别是，union会自动压缩多个结果集合中的重�
   Intersect：对两个结果集进行交集操作，不包括重复行，同时进行默认规则的排序；
 
   Minus：对两个结果集进行差操作，不包括重复行，同时进行默认规则的排序。
+
+
+
+  Parttion by 关键字是Oracle中分析性函数，可以进行分组排序，
+  和row_number()、rank()、dense_rank()函数一起使用
+
+
+  --row_number() 顺序排序
+  select row_number() over (partition by class order by score desc) 排名 ,NO,score,class from A_TEST
+
+
+  --rank() 跳跃排序，如果有两个第一级别时，接下来是第三级别
+  select rank() over (partition by class order by score desc) 排名 ,NO,score,class from A_TEST
+
+
+  --dense_rank() 连续排序，如果有两个第一级别时，接下来是第二级
+  select dense_rank() over (partition by class order by score desc) 排名 ,NO,score,class from A_TEST
+
+

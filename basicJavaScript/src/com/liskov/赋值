@@ -1,0 +1,4 @@
+a || b :
+在js中，这相当于一个赋值语句，如果b的值大于0或为true，那么就把b的值赋给a，否在就把c的值赋给a
+
+布尔值，javascript中以下值会被转换为false....... false   underfined   null   0   -0   NAN    ""

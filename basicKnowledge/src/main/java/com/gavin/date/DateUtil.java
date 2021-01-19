@@ -3,6 +3,7 @@ package com.gavin.date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -847,5 +848,79 @@ public class DateUtil extends org.apache.commons.lang3.time.DateUtils {
 	    	check = false;
 	    }
 	    return check;
+    }
+
+    /**
+     * @Author gaoming
+     * @Description //TODO 获取连续的月份-当前时间往前推-长度随你的数组而定
+     * @Date 2021/1/18 16:07
+     * @Param
+     * @return
+     **/
+    public String [] getSeriesMonth(){
+        Calendar  from  =  Calendar.getInstance();
+        String[] sbsj = {"0", "0", "0", "0", "0"};
+        for (int i = 0; i <sbsj.length ; i++) {
+            from.setTime(new Date());
+//            System.out.println(i + "------------");
+            from.add(Calendar.MONTH, -i);
+//            System.out.println(Calendar.MONTH + "==============");
+            sbsj[sbsj.length-1-i] = String.valueOf((from.get(Calendar.MONTH) + 1));
+        }
+        return sbsj;//结果 ["9","10","11","12","1"]
+    }
+
+    /**
+     * @Author gaoming
+     * @Description //TODO 得到从现在起，过去12个月的数据
+     * @Date 2021/1/18 16:11
+     * @Param []
+     * @return java.lang.String
+     **/
+    public String getAllMonth(){
+        LocalDate today = LocalDate.now();
+        String ss = null;
+        for(long i = 0L;i <= 11L; i++){
+            LocalDate localDate = today.minusMonths(i);
+            ss = localDate.toString().substring(0,7);
+//            System.out.println(localDate);
+//            System.out.println(ss);
+//            System.out.println("==============");
+        }
+        return ss;
+    }
+
+    /**
+     * 计算两个日期之间相差的天数
+     * @param smdate 较小的时间
+     * @param bdate  较大的时间
+     * @return 相差天数
+     * @throws ParseException
+     */
+    public  int daysBetween(Date smdate,Date bdate) throws ParseException
+    {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        smdate=sdf.parse(sdf.format(smdate));
+        bdate=sdf.parse(sdf.format(bdate));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(smdate);
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(bdate);
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24);
+
+        return Integer.parseInt(String.valueOf(between_days));
+    }
+
+    public  int daysBetween(String smdate,String bdate) throws ParseException{
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sdf.parse(smdate));
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(sdf.parse(bdate));
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24);
+
+        return Integer.parseInt(String.valueOf(between_days));
     }
 }

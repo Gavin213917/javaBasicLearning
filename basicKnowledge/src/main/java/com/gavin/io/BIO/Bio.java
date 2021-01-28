@@ -7,7 +7,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 
 public class Bio {
-    //private User1 user;
     public static void main(String[] args) {
         //Initializes The Object
         User1 user = new User1();

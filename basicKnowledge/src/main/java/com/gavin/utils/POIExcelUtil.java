@@ -60,10 +60,10 @@ public class POIExcelUtil {
 		
 		// 设置细边框
 		CellStyle cellStyle= wb.createCellStyle();
-		cellStyle.setBorderRight(BorderStyle.THIN);
-		cellStyle.setBorderBottom(BorderStyle.THIN);
-		cellStyle.setBorderLeft(BorderStyle.THIN);
-		cellStyle.setBorderTop(BorderStyle.THIN);
+//		cellStyle.setBorderRight(BorderStyle.THIN);
+//		cellStyle.setBorderBottom(BorderStyle.THIN);
+//		cellStyle.setBorderLeft(BorderStyle.THIN);
+//		cellStyle.setBorderTop(BorderStyle.THIN);
 		
 		
 		//开始写数据的行
@@ -136,10 +136,10 @@ public class POIExcelUtil {
 		
 		// 设置细边框
 		CellStyle cellStyle= wb.createCellStyle();
-		cellStyle.setBorderRight(BorderStyle.THIN);
-		cellStyle.setBorderBottom(BorderStyle.THIN);
-		cellStyle.setBorderLeft(BorderStyle.THIN);
-		cellStyle.setBorderTop(BorderStyle.THIN);
+//		cellStyle.setBorderRight(BorderStyle.THIN);
+//		cellStyle.setBorderBottom(BorderStyle.THIN);
+//		cellStyle.setBorderLeft(BorderStyle.THIN);
+//		cellStyle.setBorderTop(BorderStyle.THIN);
 		
 		
 		//开始写数据的行
@@ -351,10 +351,10 @@ public class POIExcelUtil {
 		
 		// 设置细边框
 		CellStyle cellStyle= wb.createCellStyle();
-		cellStyle.setBorderRight(BorderStyle.THIN);
-		cellStyle.setBorderBottom(BorderStyle.THIN);
-		cellStyle.setBorderLeft(BorderStyle.THIN);
-		cellStyle.setBorderTop(BorderStyle.THIN);
+//		cellStyle.setBorderRight(BorderStyle.THIN);
+//		cellStyle.setBorderBottom(BorderStyle.THIN);
+//		cellStyle.setBorderLeft(BorderStyle.THIN);
+//		cellStyle.setBorderTop(BorderStyle.THIN);
 		
 		
 		//开始写数据的行

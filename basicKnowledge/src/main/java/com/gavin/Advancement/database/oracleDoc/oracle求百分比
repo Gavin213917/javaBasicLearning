@@ -1,0 +1,78 @@
+需要使用百分率，保留2位小数，其实只用round就可以实现(round(_data,2) )，但是格式不是很工整，对格式要求不严谨的情况下使用round即可，以下是网络搜索到的处理方法：
+
+　　方法一：使用to_char的fm格式，即：
+
+　　to_char(round(data.amount,2),'FM9999999999999999.00') as amount
+
+　　不足之处是，如果数值是0的话，会显示为.00而不是0.00。
+
+　　另一需要注意的是，格式中小数点左边9的个数要够多，否则查询的数字会显示为n个符号“#”。
+
+　　解决方式如下：
+
+　　select decode(salary,0,'0.00',(to_char(round(salary,2),'fm99999999999999.00'))) from can_do;
+
+
+　　方法二：使用case when then else end进行各种情况的判断处理：
+
+　　case
+
+　　when instr(to_char(data.amount), '.') < 1 then
+
+　　data.amount || '.00'
+
+　　when instr(to_char(data.amount), '.') + 1 = length(data.amount) then
+
+　　data.amount || '0'
+
+　　else
+
+　　to_char(round(data.amount, 2))
+
+　　end as amount_format
+
+
+
+　　方法三：可以使用Oracle自带的参数设置，即
+
+　　column amount format l9999999999.99
+
+　　此方法的不足是，format中的小数点左面的9的个数要已知，否则会出现超过的数字显示为########的情况。
+
+　　另外一个问题是，使用column时，设置生效是session级还是system级，需要注意。
+
+　　也许某张表的数值列不总是要求所有的地方显示时，都是小数点后两位的格式，
+
+　　此时只能使用session级，但是有个数据库连接会话超时的问题，如果不是使用到system级，不建议使用该方法。
+
+
+
+　　方法四：使用to_char+trim的方式，如下：
+
+　　select trim(to_char(1234,'99999999999999.99')) from dual;
+
+　　或者
+
+　　select ltrim(trim(to_char(1234.525,'00000000000000.00')),'0') from dual;
+
+　　此处使用了14个9或者14个0的格式，建议使用14个9的方式，方便些。方法四的不足之处是
+
+　　如果数值是0的话，转化之后为.00而不是0.00，补救措施是，decode一下。
+
+　　另一需要注意的是，格式中小数点左边9或者0的个数要够多，负责查询的数字会显示为n个符号“#”。
+
+　　如下：
+
+　　select decode(salary,0,'0.00',trim(to_char(salary,'99999999999999.99'))) from can_do;
+
+　　或者
+
+　　select decode(salary,0,'0.00',ltrim(trim(to_char(salary,'00000000000000.00')),'0')) from can_do;
+
+　　结论：建议使用方法四中的trim+to_char的方式或者方法一的补救之后的方式，而且最好使用小数点左边n个9的方式，不要使用0的方式，否则，要多一步trim处理。
+
+　　即：select decode(salary,0,'0.00',trim(to_char(salary,'99999999999999.99'))) from can_do;
+
+　　或者
+
+　　select decode(salary,0,'0.00',(to_char(round(salary,2),'fm99999999999999.00'))) from can_do;
